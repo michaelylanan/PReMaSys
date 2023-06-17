@@ -18,7 +18,7 @@ namespace PReMaSys.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("prms")
-                .HasAnnotation("ProductVersion", "6.0.18")
+                .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);

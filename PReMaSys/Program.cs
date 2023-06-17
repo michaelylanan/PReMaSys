@@ -5,6 +5,7 @@ using PReMaSys.Data;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using PReMaSys.Services;
 using PReMaSys.Areas.Identity.Services;
+using PReMaSys.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +73,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 });
 //End of Configuration
+
+// Add the AuditLogController to the services
+builder.Services.AddScoped<AuditLogController>();
 
 
 var app = builder.Build();
