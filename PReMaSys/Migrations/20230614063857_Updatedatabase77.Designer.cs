@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PReMaSys.Data;
 
@@ -11,9 +12,10 @@ using PReMaSys.Data;
 namespace PReMaSys.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230614063857_Updatedatabase77")]
+    partial class Updatedatabase77
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -755,10 +757,13 @@ namespace PReMaSys.Migrations
                     b.Property<decimal>("UnitsSold")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<byte[]>("UserImage")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("SalesID");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("SalesPerformances", "prms");
                 });
@@ -940,6 +945,17 @@ namespace PReMaSys.Migrations
                         .IsRequired();
 
                     b.Navigation("SalesPerformance");
+                });
+
+            modelBuilder.Entity("PReMaSys.Models.SalesPerformance", b =>
+                {
+                    b.HasOne("PReMaSys.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PReMaSys.Models.SERecord", b =>

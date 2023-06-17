@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PReMaSys.Data;
 
@@ -11,9 +12,10 @@ using PReMaSys.Data;
 namespace PReMaSys.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230614035716_UpdateSalesTable2")]
+    partial class UpdateSalesTable2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -669,26 +671,19 @@ namespace PReMaSys.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ForecastID"), 1L, 1);
 
-                    b.Property<decimal?>("DailyForecast")
+                    b.Property<decimal>("MonthlyForecast")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("MonthlyForecast")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("QuarterlyForecast")
+                    b.Property<decimal>("QuarterlyForecast")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("SPID")
                         .HasColumnType("int");
 
-                    b.Property<string>("SalesPerson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("WeeklyForecast")
+                    b.Property<decimal>("WeeklyForecast")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("YearlyForecast")
+                    b.Property<decimal>("YearlyForecast")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ForecastID");
@@ -736,9 +731,6 @@ namespace PReMaSys.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("SalesProfit")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal?>("SalesRevenue")
                         .HasColumnType("decimal(18,2)");
 
@@ -754,9 +746,6 @@ namespace PReMaSys.Migrations
 
                     b.Property<decimal>("UnitsSold")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte[]>("UserImage")
-                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("SalesID");
 

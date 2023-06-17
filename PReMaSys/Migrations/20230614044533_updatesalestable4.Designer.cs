@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PReMaSys.Data;
 
@@ -11,9 +12,10 @@ using PReMaSys.Data;
 namespace PReMaSys.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230614044533_updatesalestable4")]
+    partial class updatesalestable4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -669,9 +671,6 @@ namespace PReMaSys.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ForecastID"), 1L, 1);
 
-                    b.Property<decimal?>("DailyForecast")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal?>("MonthlyForecast")
                         .HasColumnType("decimal(18,2)");
 
@@ -680,10 +679,6 @@ namespace PReMaSys.Migrations
 
                     b.Property<int>("SPID")
                         .HasColumnType("int");
-
-                    b.Property<string>("SalesPerson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("WeeklyForecast")
                         .HasColumnType("decimal(18,2)");
@@ -754,9 +749,6 @@ namespace PReMaSys.Migrations
 
                     b.Property<decimal>("UnitsSold")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte[]>("UserImage")
-                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("SalesID");
 
