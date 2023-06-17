@@ -31,6 +31,8 @@ namespace PReMaSys.Models
         [Display(Name = "Point Cost")]
         public decimal PointsCost { get; set; }
 
+        public int inventory { get; set; }
+
         public Status? Status { get; set; }
 
         [Display(Name = "Date Added")]
