@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PReMaSys.Data;
 
 using PReMaSys.Models;
@@ -159,16 +160,35 @@ namespace PReMaSys.Controllers
             return RedirectToAction("EmployeeHomePage");
         }
 
-        //Delete Item from Cart
+        ////Delete Item from Cart
+        //public IActionResult DeleteItem(int? id)
+        //{
+
+        //    if (id == null)
+        //    {
+        //        return RedirectToAction("AddToCartDisplay");
+        //    }
+
+        //    var cart = _context.AddToCart.Where(i => i.CartId == id).SingleOrDefault();
+        //    if (cart == null)
+        //    {
+        //        return RedirectToAction("AddToCartDisplay");
+        //    }
+
+        //    _context.AddToCart.Remove(cart);
+        //    _context.SaveChanges();
+
+        //    return RedirectToAction("AddToCartDisplay");
+        //}
+        // Delete Item from Cart
         public IActionResult DeleteItem(int? id)
         {
-
             if (id == null)
             {
                 return RedirectToAction("AddToCartDisplay");
             }
 
-            var cart = _context.AddToCart.Where(i => i.CartId == id).SingleOrDefault();
+            var cart = _context.AddToCart.Find(id);
             if (cart == null)
             {
                 return RedirectToAction("AddToCartDisplay");
@@ -179,6 +199,7 @@ namespace PReMaSys.Controllers
 
             return RedirectToAction("AddToCartDisplay");
         }
+
 
         public IActionResult PurchaseView()
         {
@@ -251,5 +272,62 @@ namespace PReMaSys.Controllers
             }
         }
 
+
+        [HttpPost]
+        public IActionResult PurchaseAll(Purchase record, int id)
+        {
+            ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+
+
+            var addCart = _context.AddToCart.Where(c => c.ApplicationUser == user).ToList();
+
+            var check = _context.SERecord.FirstOrDefault(c => c.SERId == user).EmployeePoints;
+            decimal cpoints = decimal.Parse(check);
+            decimal totalPayment = 0;
+
+            foreach (var item in addCart)
+            {
+                totalPayment += item.RewardPrice;
+            }
+
+            if (cpoints >= totalPayment)
+            {
+                foreach (var item in addCart)
+                {
+                    Purchase purchase = new Purchase()
+                    {
+                        ApplicationUser = user,
+                        EmployeeName = user.UserName,
+                        AddToCart = item,
+                        RewardImage = item.RewardImage,
+                        RewardName = item.RewardName,
+                        RewardPrice = item.RewardPrice,
+                        TotalPayment = item.RewardPrice,
+                        DateAdded = DateTime.Now,
+                        Stat = record.Stat
+                        
+                    };
+
+                    cpoints -= item.RewardPrice;
+
+                    _context.Purchase.Add(purchase);
+                    _context.AddToCart.Remove(item);
+                }
+
+                var SEmployees = _context.SERecord.FirstOrDefault(s => s.SERId == user);
+                SEmployees.EmployeePoints = cpoints.ToString();
+
+                _context.SERecord.Update(SEmployees);
+                _context.SaveChanges();
+
+                TempData["ResultMessage"] = "Thank you for your Purchase!";
+                return RedirectToAction("AddToCartDisplay");
+            }
+            else
+            {
+                TempData["ResultMessage2"] = "Sorry! Insufficient Points!";
+                return RedirectToAction("AddToCartDisplay");
+            }
+        }
     }
 }

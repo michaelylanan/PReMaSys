@@ -206,7 +206,7 @@ namespace PReMaSys.Controllers
                 var insertrec = await _userManager.CreateAsync(user, se.Password);
                 if (insertrec.Succeeded)
                 {
-                    ViewBag.message = "The User \t " + se.Email + "\tIs Saved Succesfully..!!";
+                    TempData["ResultMessage"] = "The User \t " + se.Email + "\tIs Saved Succesfully..!!";
                 }
                 else
                 {
@@ -218,7 +218,7 @@ namespace PReMaSys.Controllers
             }
             else
             {
-                ViewBag.message2 = "Password Mismatch";
+                TempData["ResultMessage2"] = "Password Mismatch";
             }
 
             var latest = user.Id;

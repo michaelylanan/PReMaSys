@@ -15,15 +15,15 @@ namespace PReMaSys.Controllers
             return View();
         }
 
-        public IActionResult OTP()
-        {
-            return View();
-        }
-
         public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
         {
             _context = context;
             _logger = logger;
+        }
+
+        public IActionResult OTP()
+        {
+            return View();
         }
 
 
