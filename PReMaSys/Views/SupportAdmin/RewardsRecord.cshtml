@@ -85,7 +85,7 @@
                         @Html.DisplayFor(modelItem => item.DateModified)
                     </td>
                     <td>
-                        <a asp-action="EditR" asp-route-id="@item.RewardsInformationId" class="btn btn-info"><i class="fa-regular fa-pen-to-square"></i></a>
+                        <a asp-action="Update" asp-route-id="@item.RewardsInformationId" class="btn btn-info"><i class="fa-regular fa-pen-to-square"></i></a>
                         <a asp-action="DeleteR" asp-route-id="@item.RewardsInformationId" class="btn btn-danger" onclick='return confirm("Are You Sure?");'><i class="fa-regular fa-trash-can"></i></a>
                     </td>
                 </tr>

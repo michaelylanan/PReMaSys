@@ -11,20 +11,26 @@
         <h2 class="point-total-header" style="font-size:30px; color:red">@TempData["ResultMessage2"]</h2>
     </div>
     <div>
-        @using (@Html.BeginForm())
+        @using (Html.BeginForm("Purchase", "Employee", FormMethod.Post))
         {
+            @Html.AntiForgeryToken()
+
             <h1 class="text-center mt-5">Rewards Purchased</h1>
             <div class="card addToCart-card border border-success mx-auto border-2 mt-5 mb-3">
                 <div class="card-body mx-auto">
-                    <img src="@Url.Content(Model.RewardImage)" class="card-img-top " alt="...">
+                    <img src="@Url.Content(Model.RewardImage)" class="card-img-top" alt="...">
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item border-success"> <h1 class="text-center fw-bold">@Model.RewardName</h1></li>
-                    <li class="list-group-item border-success"><h4>Reward Price: @Model.RewardPrice</h4></li>
-                    <li class="list-group-item text-center border-success ">
+                    <li class="list-group-item border-success">
+                        <h1 class="text-center fw-bold">@Model.RewardName</h1>
+                    </li>
+                    <li class="list-group-item border-success">
+                        <h4>Reward Price: @Model.RewardPrice</h4>
+                    </li>
+                    <li class="list-group-item text-center border-success">
                         <div>
-                            <input type="submit" value="Submit" class="btn btn-success" />
-                            <a asp-action="AddToCartDisplay" asp-controller="Employee" type="button" class="btn btn-outline-success">Back to List</a>
+                            <button type="submit" class="btn btn-success">Submit</button>
+                            <a asp-action="AddToCartDisplay" asp-controller="Employee" class="btn btn-outline-success">Back to List</a>
                         </div>
                     </li>
                 </ul>

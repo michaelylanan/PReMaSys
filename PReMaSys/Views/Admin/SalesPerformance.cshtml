@@ -1,0 +1,89 @@
+﻿@inject PReMaSys.Data.ApplicationDbContext _context
+
+@model PReMaSys.Models.SalesPerformance
+
+@{
+    ViewData["Title"] = "SalesPerformance";
+
+    var employeeList = _context.SERecord.ToList();
+}
+
+<h1>SalesPerformance</h1>
+
+<h4>SalesPerformance</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SalesPerformance">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <select asp-for="SalesPerson" class="form-select form-select" aria-label=".form-select example" required
+                        asp-items="@(new SelectList(employeeList,"EmployeeNo", "EmployeeFirstname"))">
+                    <option value="">Select a SalesPerson...</option>
+                </select>
+                <span asp-validation-for="SalesPerson" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnitsSold" class="control-label"></label>
+                <input asp-for="UnitsSold" class="form-control" />
+                <span asp-validation-for="UnitsSold" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnitType" class="control-label"></label>
+                <input asp-for="UnitType" class="form-control" />
+                <span asp-validation-for="UnitType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Particulars" class="control-label"></label>
+                <input asp-for="Particulars" class="form-control" />
+                <span asp-validation-for="Particulars" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CostPricePerUnit" class="control-label"></label>
+                <input asp-for="CostPricePerUnit" class="form-control" />
+                <span asp-validation-for="CostPricePerUnit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SellingPricePerUnit" class="control-label"></label>
+                <input asp-for="SellingPricePerUnit" class="form-control" />
+                <span asp-validation-for="SellingPricePerUnit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SalesVolume" class="control-label"></label>
+                <input asp-for="SalesVolume" class="form-control" />
+                <span asp-validation-for="SalesVolume" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConversionR" class="control-label"></label>
+                <input asp-for="ConversionR" class="form-control" />
+                <span asp-validation-for="ConversionR" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AverageDealSize" class="control-label"></label>
+                <input asp-for="AverageDealSize" class="form-control" />
+                <span asp-validation-for="AverageDealSize" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomerAcquisition" class="control-label"></label>
+                <input asp-for="CustomerAcquisition" class="form-control" />
+                <span asp-validation-for="CustomerAcquisition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomerRetentionR" class="control-label"></label>
+                <input asp-for="CustomerRetentionR" class="form-control" />
+                <span asp-validation-for="CustomerRetentionR" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

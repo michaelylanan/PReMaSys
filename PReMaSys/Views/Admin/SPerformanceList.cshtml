@@ -1,0 +1,64 @@
+﻿@model List<SalesPerformance>
+
+<h2>Sales Performance List</h2>
+<a asp-action="SalesPerformance" class="btn btn-success p-2 mb-3 d-inline-block">Create New +</a>
+<table class="table table-hover" id=datatable>
+    <thead>
+        <tr>
+            <th>Sales ID</th>
+            <th>Sales Person</th>
+            <th>Units Sold</th>
+            <th>Unit Type</th>
+            <th>Particulars</th>
+            <th>Cost Price Per Unit</th>
+            <th>Selling Price Per Unit</th>
+            <th>Sales Revenue</th>
+            <th>Sales Profit</th>
+            <th>Sales Volume</th>
+            <th>Conversion Rate</th>
+            <th>Average Deal Size</th>
+            <th>Customer Acquisition</th>
+            <th>Customer Retention Rate</th>
+            <th>Date Added</th>
+            <th>Date Modified</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="4" style="color:red; font-family:'Franklin Gothic Book'"> No rows match the Search Criteria!</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.SalesID</td>
+                    <td>@item.SalesPerson</td>
+                    <td>@item.UnitsSold</td>
+                    <td>@item.UnitType</td>
+                    <td>@item.Particulars</td>
+                    <td>@item.CostPricePerUnit</td>
+                    <td>@item.SellingPricePerUnit</td>
+                    <td>@item.SalesRevenue</td>
+                    <td>@item.SalesProfit</td>
+                    <td>@item.SalesVolume</td>
+                    <td>@item.ConversionR</td>
+                    <td>@item.AverageDealSize</td>
+                    <td>@item.CustomerAcquisition</td>
+                    <td>@item.CustomerRetentionR</td>
+                    <td>@item.DateAdded</td>
+                    <td>@item.DateModified</td>
+                    <td>
+                        <a asp-action="Update" asp-route-id="@item.SalesID" class="btn btn-info"><i class="fa-regular fa-pen-to-square"></i></a>
+                        <a asp-action="DeleteSP" asp-route-id="@item.SalesID" class="btn btn-danger" onclick='return confirm("Are You Sure?");'><i class="fa-regular fa-trash-can"></i></a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

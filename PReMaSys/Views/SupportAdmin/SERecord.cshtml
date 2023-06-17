@@ -7,7 +7,7 @@
 
 <div class="container">
   <h1 class="text-center mt-5 mb-5">Sales Employee Credentials</h1>
-        <h5 class="text-success">@ViewBag.message</h5><h5 class="text-danger">@ViewBag.message1</h5>
+    <h5 class="text-success">@TempData["ResultMessage"]</h5><h5 class="text-danger">@TempData["ResultMessage2"]</h5>
         <form asp-action="SERecord" class="se-record-form" asp-controller="SupportAdmin" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group mb-3 mt-3">

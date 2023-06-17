@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿﻿@using Microsoft.AspNetCore.Identity
 @using PReMaSys.Data
 @inject SignInManager<ApplicationUser> signInManager;
 <!DOCTYPE html>
@@ -9,15 +9,15 @@
     <title>@ViewData["Title"] - Testertest</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/siteTesting.css" asp-append-version="true" />
-     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
 </head>
 <body>
@@ -25,7 +25,8 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow">
             <div class="container-fluid">
 
-                @if(signInManager.IsSignedIn(User) && User.IsInRole("Domain")){
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Domain"))
+                {
                     <a class="navbar-brand logoname fs-3" asp-area="" asp-controller="Domain" asp-action="ReportsPage"><img src="~/img/logo.png" class="rounded-circle logopic me-3" width="80" />PReMaSys</a>
                 }
                 else if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
@@ -39,44 +40,46 @@
                 else if (signInManager.IsSignedIn(User) && User.IsInRole("Sales"))
                 {
                     <a class="navbar-brand logoname fs-3" asp-area="" asp-controller="Employee" asp-action="EmployeeHomePage"><img src="~/img/logo.png" class="rounded-circle logopic me-3" width="80" />PReMaSys</a>
-                }else{
+                }
+                else
+                {
                     <a class="navbar-brand logoname fs-3" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/logo.png" class="rounded-circle logopic me-3" width="80" />PReMaSys</a>
                 }
-              
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                       @* <li class="nav-item"> 
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        @* <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>*@
                         <li class="nav-item">
                             <a class="nav-link-form text-dark" asp-area="" asp-controller="Manage" asp-action="ListAllRoles">Manage Roles</a>
                         </li>
-                         <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link-form text-dark" asp-area="" asp-controller="Home" asp-action="OTP">OTP Pin</a>
                         </li>
-                    </ul>         
-                     <partial name="_LoginPartial" />     
+                    </ul>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
-        </nav> 
+        </nav>
     </header>
     <div class="container">
         <main role="main">
             @RenderBody()
         </main>
     </div>
-        
+
     @*<footer class="border-top footer text-muted" style="bottom:0; height:60px;width:100%; padding:20px">
-        <div class="container">
-            &copy; 2022 - PReMaSys - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <div class="container">
+    &copy; 2022 - PReMaSys - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
     </footer>*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

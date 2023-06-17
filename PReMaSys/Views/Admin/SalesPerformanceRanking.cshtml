@@ -1,0 +1,75 @@
+﻿@model SalesPerformanceRankingViewModel
+@inject PReMaSys.Data.ApplicationDbContext _context
+
+<h2>Top Three Performances</h2>
+
+<p>Current Time and Date: <span id="date-time"></span>.</p>
+
+<div class="card-deck" style="display:flex">
+    @foreach (var performance in Model.TopThreePerformances)
+    {
+        <div class="card">
+            <div class="card-body">
+                @{
+                    var salesName = _context.SERecord.FirstOrDefault(s => s.EmployeeNo == performance.SalesPerson)?.EmployeeFirstname;
+                    var userWithImage = _context.SERecord.FirstOrDefault(u => u.EmployeeNo == performance.SalesPerson);
+                    if (userWithImage != null && userWithImage.SERId != null)
+                    {
+                        var userIdString = userWithImage.SERId.ToString();
+                        var user = _context.Users.FirstOrDefault(u => u.Id == userIdString);
+
+                        if (user != null && user.Pic != null)
+                        {
+                                    <img src="data:image/jpeg;base64,@(Convert.ToBase64String(user.Pic))" alt="User Image" class="card-img-top" style="object-fit: cover; height: 200px;">
+                        }
+                        else
+                        {
+                                    <img src="~/img/boy.png" alt="Default Image" class="card-img-top" style="object-fit: cover; height: 200px;">
+                        }
+                    }
+                    else
+                    {
+                                <img src="~/img/boy.png" alt="Default Image" class="card-img-top" style="object-fit: cover; height: 200px;">
+                    }
+                }
+                <h5 class="card-title">
+                    @salesName
+                    @performance.SalesPerson
+                    
+                </h5>
+                <p class="card-text">Units Sold: @performance.UnitsSold</p>
+                <p class="card-text">Sales Revenue: @performance.SalesRevenue</p>
+                <p class="card-text">Sales Profit: @performance.SalesProfit</p>
+            </div>
+        </div>
+    }
+</div>
+
+<h2>Remaining Performances</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sales Person</th>
+            <th>Units Sold</th>
+            <th>Sales Revenue</th>
+            <th>Sales Profit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var performance in Model.RemainingPerformances)
+        {
+            <tr>
+                <td>@performance.SalesPerson</td>
+                <td>@performance.UnitsSold</td>
+                <td>@performance.SalesRevenue</td>
+                <td>@performance.SalesProfit</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    var dt = new Date();
+    document.getElementById('date-time').innerHTML=dt;
+</script>

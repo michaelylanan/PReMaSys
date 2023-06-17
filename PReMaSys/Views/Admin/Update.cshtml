@@ -1,0 +1,80 @@
+﻿@model SalesPerformance
+@inject PReMaSys.Data.ApplicationDbContext _context
+
+@{
+    ViewData["Title"] = "Edit Sales Performance Record";
+
+    var employeeList = _context.SERecord.ToList();
+}
+
+<h2>Update Sales Performance</h2>
+
+<form asp-action="Update" method="post">
+    <input type="hidden" asp-for="SalesID" />
+
+    <div class="form-group">
+        <select asp-for="SalesPerson" class="form-select form-select" aria-label=".form-select example" required
+                asp-items="@(new SelectList(employeeList,"EmployeeNo", "EmployeeFirstname"))">
+            <option value="">Select a SalesPerson...</option>
+        </select>
+        <span asp-validation-for="SalesPerson" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="UnitsSold" class="control-label"></label>
+        <input asp-for="UnitsSold" class="form-control" />
+        <span asp-validation-for="UnitsSold" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="UnitType" class="control-label"></label>
+        <input asp-for="UnitType" class="form-control" />
+        <span asp-validation-for="UnitType" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Particulars" class="control-label"></label>
+        <input asp-for="Particulars" class="form-control" />
+        <span asp-validation-for="Particulars" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CostPricePerUnit" class="control-label"></label>
+        <input asp-for="CostPricePerUnit" class="form-control" />
+        <span asp-validation-for="CostPricePerUnit" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SellingPricePerUnit" class="control-label"></label>
+        <input asp-for="SellingPricePerUnit" class="form-control" />
+        <span asp-validation-for="SellingPricePerUnit" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SalesVolume" class="control-label">Sales Volume</label>
+        <input asp-for="SalesVolume" class="form-control" />
+        <span asp-validation-for="SalesVolume" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ConversionR" class="control-label">Conversion Rate</label>
+        <input asp-for="ConversionR" class="form-control" />
+        <span asp-validation-for="ConversionR" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AverageDealSize" class="control-label">Average Deal Size</label>
+        <input asp-for="AverageDealSize" class="form-control" />
+        <span asp-validation-for="AverageDealSize" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CustomerAcquisition" class="control-label">Customer Acquisition</label>
+        <input asp-for="CustomerAcquisition" class="form-control" />
+        <span asp-validation-for="CustomerAcquisition" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CustomerRetentionR" class="control-label">Customer Retention Rate</label>
+        <input asp-for="CustomerRetentionR" class="form-control" />
+        <span asp-validation-for="CustomerRetentionR" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="SPerformanceList" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
