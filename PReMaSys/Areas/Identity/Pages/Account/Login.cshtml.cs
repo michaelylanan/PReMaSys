@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PReMaSys.Controllers;
 using PReMaSys.Data;
 using System.ComponentModel.DataAnnotations;
 
@@ -15,11 +16,19 @@ namespace PReMaSys.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<LoginModel> logger)
+        //AuditLogs
+        private readonly AuditLogController _auditLogController;
+
+        public LoginModel(
+         SignInManager<ApplicationUser> signInManager,
+         UserManager<ApplicationUser> userManager,
+         ILogger<LoginModel> logger,
+         AuditLogController auditLogController)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
+            _auditLogController = auditLogController;
         }
 
         [BindProperty]
@@ -78,6 +87,11 @@ namespace PReMaSys.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
+
+                    //AuditLogs
+                    _auditLogController.LogLoginEvent(Input.Email, "Successful");
+
+
                     _logger.LogInformation("User logged in.");
 
                     var user = await _userManager.FindByEmailAsync(Input.Email);
@@ -111,6 +125,8 @@ namespace PReMaSys.Areas.Identity.Pages.Account
                      {
                          return Redirect("~/Employee/EmployeeHomePage");
                      }*/
+                    // Log failed login event
+                    
                     return LocalRedirect(returnUrl);//redirect to this page returnUrl = ("~/")
 
 
@@ -122,11 +138,13 @@ namespace PReMaSys.Areas.Identity.Pages.Account
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
+                    _auditLogController.LogLoginEvent(Input.Email, "Account Locked");
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    _auditLogController.LogLoginEvent(Input.Email, "Failed");
                     return Page();
                 }
             }

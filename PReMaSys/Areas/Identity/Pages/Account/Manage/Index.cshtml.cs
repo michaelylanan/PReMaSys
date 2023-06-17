@@ -40,7 +40,7 @@ namespace PReMaSys.Areas.Identity.Pages.Account.Manage
         {
             [Phone]
             [Display(Name = "Phone number")]
-            [RegularExpression(@"^\(?([0-9]{3})\)?[.]?([0-9]{4})[. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid. Must be 11 digits and numeric")]
+            [RegularExpression(@"^(|\+639)\d{9}$", ErrorMessage = "Entered phone format is not valid. Must be 11 digits and numeric (+639 #### ####)")]
             public string PhoneNumber { get; set; }
 
             [Display(Name = "Company Logo")]
