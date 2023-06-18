@@ -12,8 +12,8 @@ using PReMaSys.Data;
 namespace PReMaSys.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230617114604_UpdatedDB")]
-    partial class UpdatedDB
+    [Migration("20230617120807_NewTablez")]
+    partial class NewTablez
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

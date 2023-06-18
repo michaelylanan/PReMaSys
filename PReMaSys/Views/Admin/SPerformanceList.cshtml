@@ -1,8 +1,14 @@
 ﻿@model List<SalesPerformance>
 
-<h2>Sales Performance List</h2>
+    @{
+    ViewData["Title"] = "Sales Performance List";
+    Layout = "~/Views/Shared/_LayoutLoggedin.cshtml";
+}
+
+<h1 class="text-center mt-5 mb-5">Sales Performance List</h1>
 <a asp-action="SalesPerformance" class="btn btn-success p-2 mb-3 d-inline-block">Create New +</a>
-<table class="table table-hover" id=datatable>
+<div class="table-responsive">
+    <table class="table table-hover" id=datatable>
     <thead>
         <tr>
             <th>Sales ID</th>
@@ -53,12 +59,27 @@
                     <td>@item.DateAdded</td>
                     <td>@item.DateModified</td>
                     <td>
-                        <a asp-action="Update" asp-route-id="@item.SalesID" class="btn btn-info"><i class="fa-regular fa-pen-to-square"></i></a>
+                        <div class="d-flex">
+                              <a asp-action="Update" asp-route-id="@item.SalesID" class="btn btn-info me-3"><i class="fa-regular fa-pen-to-square"></i></a>
                         <a asp-action="DeleteSP" asp-route-id="@item.SalesID" class="btn btn-danger" onclick='return confirm("Are You Sure?");'><i class="fa-regular fa-trash-can"></i></a>
+                        </div>
                     </td>
                 </tr>
             }
         }
     </tbody>
 </table>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>"
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function () {
+    $('#datatable').DataTable();
+});
+</script>
+</div>
+
+@*<a class="notificationback-link btn btn-outline-success p-2 " href="AdminDashboard" type="button">Back</a>
+*@
+</div>
 

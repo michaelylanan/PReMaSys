@@ -4,7 +4,7 @@
 
 namespace PReMaSys.Migrations
 {
-    public partial class UpdatedDB : Migration
+    public partial class updated : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

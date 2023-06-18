@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace PReMaSys.Controllers
 {
-    [Authorize(Roles = "Support")]
+    //[Authorize(Roles = "Support")]
     public class SupportAdminController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;

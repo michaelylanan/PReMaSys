@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace PReMaSys.Controllers
 {
-    [Authorize(Roles = "Domain")]
+   // [Authorize(Roles = "Domain")]
     public class DomainController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;

@@ -1,15 +1,25 @@
 ﻿@model SalesPerformanceRankingViewModel
 @inject PReMaSys.Data.ApplicationDbContext _context
 
-<h2>Top Three Performances</h2>
+@{
+    ViewData["Title"] = "Sales Performance";
+    Layout = "~/Views/Shared/_LayoutLoggedin.cshtml";
+}
 
-<p>Current Time and Date: <span id="date-time"></span>.</p>
 
-<div class="card-deck" style="display:flex">
+<div class="text-center mb-5 mt-5">
+   <h2>Top Three Performances</h2>
+   <p style="color:grey">Current Time and Date: <span id="date-time"></span>.</p>
+</div>
+
+@*<div class="card-deck d-flex justify-content-center" >*@ @*style="display:flex"*@
+
+<div class="container" style="margin-top:30px; display:flex; justify-content:center" id="row">
+  <div class="row">
     @foreach (var performance in Model.TopThreePerformances)
     {
-        <div class="card">
-            <div class="card-body">
+      <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card ranking-card text-bg-light mb-3 mx-auto">
                 @{
                     var salesName = _context.SERecord.FirstOrDefault(s => s.EmployeeNo == performance.SalesPerson)?.EmployeeFirstname;
                     var userWithImage = _context.SERecord.FirstOrDefault(u => u.EmployeeNo == performance.SalesPerson);
@@ -20,34 +30,43 @@
 
                         if (user != null && user.Pic != null)
                         {
-                                    <img src="data:image/jpeg;base64,@(Convert.ToBase64String(user.Pic))" alt="User Image" class="card-img-top" style="object-fit: cover; height: 200px;">
+                                    <img src="data:image/jpeg;base64,@(Convert.ToBase64String(user.Pic))" alt="User Image" class="img-fluid card-img-top" style="width:100%; height:280px;">
                         }
                         else
                         {
-                                    <img src="~/img/boy.png" alt="Default Image" class="card-img-top" style="object-fit: cover; height: 200px;">
+                                    <img src="~/img/boy.png" alt="Default Image" class="img-fluid card-img-top" style="width:100%; height:280px">
                         }
                     }
                     else
                     {
-                                <img src="~/img/boy.png" alt="Default Image" class="card-img-top" style="object-fit: cover; height: 200px;">
+                                     <img src="~/img/boy.png" alt="Default Image" class="img-fluid card-img-top" style="width:100%; height:280px;">
                     }
                 }
-                <h5 class="card-title">
+                <div class="card-body text-center mt-3 mb-3">
                     @salesName
                     @performance.SalesPerson
                     
-                </h5>
-                <p class="card-text">Units Sold: @performance.UnitsSold</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                   <li class="list-group-item">Units Sold: @performance.UnitsSold</li>
+                   <li class="list-group-item">Sales Revenue: @performance.SalesRevenue</li>
+                   <li class="list-group-item">Sales Profit: @performance.SalesProfit</li>
+                </ul>
+                @*<p class="card-text">Units Sold: @performance.UnitsSold</p>
                 <p class="card-text">Sales Revenue: @performance.SalesRevenue</p>
-                <p class="card-text">Sales Profit: @performance.SalesProfit</p>
-            </div>
-        </div>
+                <p class="card-text">Sales Profit: @performance.SalesProfit</p>*@
+          
+          </div>
+          </div>
+     
     }
+       </div>
 </div>
 
-<h2>Remaining Performances</h2>
+<h2 class="text-center mt-5 mb-5">Remaining Performances</h2>
 
-<table class="table">
+<div class="table-repsonsive">
+    <table class="table table-hover">
     <thead>
         <tr>
             <th>Sales Person</th>
@@ -68,6 +87,8 @@
         }
     </tbody>
 </table>
+</div>
+
 
 <script>
     var dt = new Date();

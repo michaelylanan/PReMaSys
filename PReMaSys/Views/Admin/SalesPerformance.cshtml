@@ -8,81 +8,79 @@
     var employeeList = _context.SERecord.ToList();
 }
 
-<h1>SalesPerformance</h1>
+<h1 class="mt-5 text-center mb-5">SalesPerformance</h1>
+<!--<h4>SalesPerformance</h4>-->
 
-<h4>SalesPerformance</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="SalesPerformance">
+
+        <form asp-action="SalesPerformance" class="sp-form mt-5">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <select asp-for="SalesPerson" class="form-select form-select" aria-label=".form-select example" required
                         asp-items="@(new SelectList(employeeList,"EmployeeNo", "EmployeeFirstname"))">
-                    <option value="">Select a SalesPerson...</option>
+                    <option value="">Select a Sales Person...</option>
                 </select>
                 <span asp-validation-for="SalesPerson" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UnitsSold" class="control-label"></label>
-                <input asp-for="UnitsSold" class="form-control" />
+            <div class="form-group mb-3">
+              @*  <label asp-for="UnitsSold" class="control-label"></label>*@
+                <input asp-for="UnitsSold" placeholder="Units Sold" class="form-control" />
                 <span asp-validation-for="UnitsSold" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UnitType" class="control-label"></label>
-                <input asp-for="UnitType" class="form-control" />
+            <div class="form-group mb-3">
+               @* <label asp-for="UnitType" class="control-label"></label>*@
+                <input asp-for="UnitType"  placeholder="Units Type" class="form-control" />
                 <span asp-validation-for="UnitType" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Particulars" class="control-label"></label>
-                <input asp-for="Particulars" class="form-control" />
+            <div class="form-group mb-3">
+               @* <label asp-for="Particulars" class="control-label"></label>*@
+                <input asp-for="Particulars"  placeholder="Particular" class="form-control" />
                 <span asp-validation-for="Particulars" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CostPricePerUnit" class="control-label"></label>
-                <input asp-for="CostPricePerUnit" class="form-control" />
+            <div class="form-group mb-3">
+                @*<label asp-for="CostPricePerUnit" class="control-label"></label>*@
+                <input asp-for="CostPricePerUnit"  placeholder="Cost Per Unit" class="form-control" />
                 <span asp-validation-for="CostPricePerUnit" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="SellingPricePerUnit" class="control-label"></label>
-                <input asp-for="SellingPricePerUnit" class="form-control" />
+            <div class="form-group mb-3">
+                @*<label asp-for="SellingPricePerUnit" class="control-label"></label>*@
+                <input asp-for="SellingPricePerUnit"  placeholder="Selling Price Unit" class="form-control" />
                 <span asp-validation-for="SellingPricePerUnit" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="SalesVolume" class="control-label"></label>
-                <input asp-for="SalesVolume" class="form-control" />
+            <div class="form-group mb-3">
+                @*<label asp-for="SalesVolume" class="control-label"></label>*@
+                <input asp-for="SalesVolume"  placeholder="Sales Volume" class="form-control" />
                 <span asp-validation-for="SalesVolume" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ConversionR" class="control-label"></label>
-                <input asp-for="ConversionR" class="form-control" />
+            <div class="form-group mb-3">
+                @*<label asp-for="ConversionR" class="control-label"></label>*@
+                <input asp-for="ConversionR"  placeholder="Conversion R" class="form-control" />
                 <span asp-validation-for="ConversionR" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="AverageDealSize" class="control-label"></label>
-                <input asp-for="AverageDealSize" class="form-control" />
+            <div class="form-group mb-3">
+                @*<label asp-for="AverageDealSize" class="control-label"></label>*@
+                <input asp-for="AverageDealSize"  placeholder="Average Deal Size" class="form-control" />
                 <span asp-validation-for="AverageDealSize" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CustomerAcquisition" class="control-label"></label>
-                <input asp-for="CustomerAcquisition" class="form-control" />
+            <div class="form-group mb-3">
+                @*<label asp-for="CustomerAcquisition" class="control-label"></label>*@
+                <input asp-for="CustomerAcquisition"  placeholder="Customer Acquisition" class="form-control" />
                 <span asp-validation-for="CustomerAcquisition" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CustomerRetentionR" class="control-label"></label>
-                <input asp-for="CustomerRetentionR" class="form-control" />
+            <div class="form-group mb-3">
+                @*<label asp-for="CustomerRetentionR" class="control-label"></label>*@
+                <input asp-for="CustomerRetentionR"  placeholder="Customer Retention R" class="form-control" />
                 <span asp-validation-for="CustomerRetentionR" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <div class="mb-3 mt-3">
+                    <input type="submit" value="Create" class="btn btn-success" />
+                    <a asp-action="SPerformanceList"  class="btn btn-outline-success">Back to List</a>
+               </div>
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

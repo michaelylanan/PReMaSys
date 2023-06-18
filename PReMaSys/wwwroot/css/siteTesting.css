@@ -286,7 +286,7 @@ ul.navbar-list {
 /*FOR DOMAIN and SUPPORT*/
 
 
-.create-role-form, .create-se-form, .create-r-form, .edit-r-form, .edit-se-form, .edit-role-form, .approve-r-form, .deduct-points-forn, .se-record-form, .add-role-form, .resend-email-form, forgot-password-form {
+.create-role-form, .create-se-form, .create-r-form, .sp-form, .edit-r-form, .edit-se-form, .edit-role-form, .approve-r-form, .deduct-points-forn, .se-record-form, .add-role-form, .resend-email-form, forgot-password-form {
     margin: auto;
 }
 

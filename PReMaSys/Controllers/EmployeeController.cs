@@ -9,7 +9,7 @@ using PReMaSys.Models;
 
 namespace PReMaSys.Controllers
 {
-    [Authorize(Roles = "Sales")]
+    //[Authorize(Roles = "Sales")]
     public class EmployeeController : Controller
     {
         private readonly ApplicationDbContext _context;
