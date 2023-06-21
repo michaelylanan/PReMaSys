@@ -31,7 +31,9 @@ namespace PReMaSys.Data
         public DbSet<AuditLogEntry> AuditLogs { get; set; }
 
         public DbSet<SalesPerformance> SalesPerformances { get; set; }
-        public DbSet<SalesForecast> SalesForecasts { get; set; }
+        /*public DbSet<SalesForecast> SalesForecasts { get; set; }*/
+
+        public DbSet<EmployeeofThe> EmployeeofThes { get; set; }
 
 
 

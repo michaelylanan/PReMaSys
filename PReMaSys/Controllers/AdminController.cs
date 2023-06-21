@@ -6,10 +6,11 @@ using PReMaSys.Models;
 using System.Data;
 using Microsoft.EntityFrameworkCore;
 using PReMaSys.ViewModel;
+using System.Globalization;
 
 namespace PReMaSys.Controllers
 {
-   // [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,38 +21,40 @@ namespace PReMaSys.Controllers
             _context = context;
         }
 
-        public IActionResult ReportsPage() 
+        public IActionResult ReportsPage()
         {
+            UpdateSalesPersonOfTheMonthAndYear();
+
             return View();
         }
-      
-        public IActionResult AdminDashboard() 
+
+        public IActionResult AdminDashboard()
         {
             return View();
         }
 
-        public IActionResult Ranking() 
+        public IActionResult Ranking()
         {
             return View();
         }
 
-        public IActionResult Forecasts() 
+        public IActionResult Forecasts()
         {
             return View();
         }
 
-        public IActionResult Diagnostic() 
+        public IActionResult Diagnostic()
         {
             return View();
         }
 
-        public IActionResult Descriptive() 
+        public IActionResult Descriptive()
         {
             return View();
         }
 
         /*View of Rewards List -----------------------------------------------------------------------------------------------------------*/
-        public IActionResult Reward() 
+        public IActionResult Reward()
         {
             var list = _context.Rewards.ToList();
             return View(list);
@@ -59,7 +62,7 @@ namespace PReMaSys.Controllers
 
 
         /*Allocation of Sales-Profit Points-----------------------------------------------------------------------------------------------------------*/
-        public IActionResult ESalesProfitPoints() 
+        public IActionResult ESalesProfitPoints()
         {
             var list = _context.SERecord.ToList();
             return View(list);
@@ -73,7 +76,7 @@ namespace PReMaSys.Controllers
         }
 
 
-        public IActionResult AddPoints(int? id) 
+        public IActionResult AddPoints(int? id)
         {
             if (id == null)
             {
@@ -91,7 +94,7 @@ namespace PReMaSys.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddPoints(int? id, SalesEmployeeRecord record, decimal temp) 
+        public IActionResult AddPoints(int? id, SalesEmployeeRecord record, decimal temp)
         {
             var SEmployees = _context.SERecord.Where(s => s.SEmployeeRecordsID == id).SingleOrDefault();
 
@@ -109,7 +112,7 @@ namespace PReMaSys.Controllers
             return RedirectToAction("ESalesProfitPoints");
         }
 
-        public IActionResult DeductPoints(int? id) 
+        public IActionResult DeductPoints(int? id)
         {
             if (id == null)
             {
@@ -127,7 +130,7 @@ namespace PReMaSys.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeductPoints(int? id, SalesEmployeeRecord record, decimal temp) 
+        public IActionResult DeductPoints(int? id, SalesEmployeeRecord record, decimal temp)
         {
             var SEmployees = _context.SERecord.Where(s => s.SEmployeeRecordsID == id).SingleOrDefault();
 
@@ -175,34 +178,6 @@ namespace PReMaSys.Controllers
                 DateAdded = DateTime.Now
             };
 
-            // Check if there is an existing forecast for the salesperson
-            var existingForecast = _context.SalesForecasts.FirstOrDefault(sf => sf.SPID == record.SalesID && sf.SalesPerson == record.SalesPerson);
-            if (existingForecast != null)
-            {
-                // Update the existing forecast instead of creating a new one
-                existingForecast.DailyForecast = CalculateForecastedDailySalesRevenue(record.SalesPerson);
-                existingForecast.WeeklyForecast = CalculateForecastedWeeklySalesRevenue(record.SalesPerson);
-                existingForecast.MonthlyForecast = CalculateForecastedMonthlySalesRevenue(record.SalesPerson);
-                existingForecast.QuarterlyForecast = CalculateForecastedQuarterlySalesRevenue(record.SalesPerson);
-                existingForecast.YearlyForecast = CalculateForecastedYearlySalesRevenue(record.SalesPerson);
-            }
-            else
-            {
-                // Create a new forecast record
-                var forecast = new SalesForecast()
-                {
-                    SalesPerson = record.SalesPerson,
-                    DailyForecast = CalculateForecastedDailySalesRevenue(record.SalesPerson),
-                    WeeklyForecast = CalculateForecastedWeeklySalesRevenue(record.SalesPerson),
-                    MonthlyForecast = CalculateForecastedMonthlySalesRevenue(record.SalesPerson),
-                    QuarterlyForecast = CalculateForecastedQuarterlySalesRevenue(record.SalesPerson),
-                    YearlyForecast = CalculateForecastedYearlySalesRevenue(record.SalesPerson)
-                };
-
-                sales.SalesForecast = forecast;
-                _context.SalesForecasts.Add(forecast);
-            }
-
             _context.SalesPerformances.Add(sales);
             _context.SaveChanges();
 
@@ -236,145 +211,9 @@ namespace PReMaSys.Controllers
             _context.SalesPerformances.Update(recs);
             _context.SaveChanges();
 
-            // Check if there is an existing forecast for the salesperson
-            var existingForecast = _context.SalesForecasts.FirstOrDefault(sf => sf.SPID == record.SalesID && sf.SalesPerson == record.SalesPerson);
-            if (existingForecast != null)
-            {
-                // Update the existing forecast instead of creating a new one
-                existingForecast.DailyForecast = CalculateForecastedDailySalesRevenue(record.SalesPerson);
-                existingForecast.WeeklyForecast = CalculateForecastedWeeklySalesRevenue(record.SalesPerson);
-                existingForecast.MonthlyForecast = CalculateForecastedMonthlySalesRevenue(record.SalesPerson);
-                existingForecast.QuarterlyForecast = CalculateForecastedQuarterlySalesRevenue(record.SalesPerson);
-                existingForecast.YearlyForecast = CalculateForecastedYearlySalesRevenue(record.SalesPerson);
-            }
-            else
-            {
-                // Create a new forecast record
-                var forecast = new SalesForecast()
-                {
-                    SalesPerson = record.SalesPerson,
-                    DailyForecast = CalculateForecastedDailySalesRevenue(record.SalesPerson),
-                    WeeklyForecast = CalculateForecastedWeeklySalesRevenue(record.SalesPerson),
-                    MonthlyForecast = CalculateForecastedMonthlySalesRevenue(record.SalesPerson),
-                    QuarterlyForecast = CalculateForecastedQuarterlySalesRevenue(record.SalesPerson),
-                    YearlyForecast = CalculateForecastedYearlySalesRevenue(record.SalesPerson)
-                };
-                _context.SalesForecasts.Add(forecast);
-            }
-            _context.SaveChanges();
-
             return RedirectToAction("SPerformanceList");
         }
 
-        // Calculate forecasted sales revenue per day
-        public decimal? CalculateForecastedDailySalesRevenue(string SalesPerson)
-        {
-            DateTime currentDate = DateTime.Today;
-
-            // Get the start and end dates for the current day
-            DateTime startDate = currentDate.Date;
-            DateTime endDate = startDate.AddDays(1);
-
-            // Get the two most recent sales records for the current day
-            var recentSalesRecords = _context.SalesPerformances
-                .Where(s => s.DateAdded >= startDate && s.DateAdded < endDate && s.SalesPerson == SalesPerson)
-                .OrderByDescending(s => s.DateAdded)
-                .Take(2)
-                .ToList();
-
-            // Calculate the average sales revenue for the current day
-            decimal? averageSalesRevenue = recentSalesRecords.Count > 0 ? recentSalesRecords.Average(s => s.SalesProfit) : null;
-
-            return averageSalesRevenue;
-        }
-
-        // Calculate forecasted sales revenue per week
-        public decimal? CalculateForecastedWeeklySalesRevenue(String SalesPerson)
-        {
-            DateTime currentDate = DateTime.Today;
-
-            // Get the start and end dates for the current week
-            DateTime startDate = currentDate.AddDays(-((int)currentDate.DayOfWeek));
-            DateTime endDate = startDate.AddDays(7);
-
-            // Get the two most recent sales records for the current week
-            var recentSalesRecords = _context.SalesPerformances
-                .Where(s => s.DateAdded >= startDate && s.DateAdded < endDate && s.SalesPerson == SalesPerson)
-                .OrderByDescending(s => s.DateAdded)
-                .Take(2)
-                .ToList();
-
-            // Calculate the average sales revenue for the current week
-            decimal? averageSalesRevenue = recentSalesRecords.Count > 0 ? recentSalesRecords.Average(s => s.SalesProfit) : null;
-
-            return averageSalesRevenue;
-        }
-
-        // Calculate forecasted sales revenue per month
-        public decimal? CalculateForecastedMonthlySalesRevenue(String SalesPerson)
-        {
-            DateTime currentDate = DateTime.Today;
-
-            // Get the start and end dates for the current month
-            DateTime startDate = new DateTime(currentDate.Year, currentDate.Month, 1);
-            DateTime endDate = startDate.AddMonths(1);
-
-            // Get the two most recent sales records for the current month
-            var recentSalesRecords = _context.SalesPerformances
-                .Where(s => s.DateAdded >= startDate && s.DateAdded < endDate && s.SalesPerson == SalesPerson)
-                .OrderByDescending(s => s.DateAdded)
-                .Take(2)
-                .ToList();
-
-            // Calculate the average sales revenue for the current month
-            decimal? averageSalesRevenue = recentSalesRecords.Count > 0 ? recentSalesRecords.Average(s => s.SalesProfit) : null;
-
-            return averageSalesRevenue;
-        }
-
-        // Calculate forecasted sales revenue per quarter
-        public decimal? CalculateForecastedQuarterlySalesRevenue(String SalesPerson)
-        {
-            DateTime currentDate = DateTime.Today;
-
-            // Get the start and end dates for the current quarter
-            DateTime startDate = new DateTime(currentDate.Year, (currentDate.Month - 1) / 3 * 3 + 1, 1);
-            DateTime endDate = startDate.AddMonths(3);
-
-            // Get the two most recent sales records for the current quarter
-            var recentSalesRecords = _context.SalesPerformances
-                .Where(s => s.DateAdded >= startDate && s.DateAdded < endDate && s.SalesPerson == SalesPerson)
-                .OrderByDescending(s => s.DateAdded)
-                .Take(2)
-                .ToList();
-
-            // Calculate the average sales revenue for the current quarter
-            decimal? averageSalesRevenue = recentSalesRecords.Count > 0 ? recentSalesRecords.Average(s => s.SalesProfit) : null;
-
-            return averageSalesRevenue;
-        }
-
-        // Calculate forecasted sales revenue per year
-        public decimal? CalculateForecastedYearlySalesRevenue(String SalesPerson)
-        {
-            DateTime currentDate = DateTime.Today;
-
-            // Get the start and end dates for the current year
-            DateTime startDate = new DateTime(currentDate.Year, 1, 1);
-            DateTime endDate = startDate.AddYears(1);
-
-            // Get the two most recent sales records for the current year
-            var recentSalesRecords = _context.SalesPerformances
-                .Where(s => s.DateAdded >= startDate && s.DateAdded < endDate && s.SalesPerson == SalesPerson)
-                .OrderByDescending(s => s.DateAdded)
-                .Take(2)
-                .ToList();
-
-            // Calculate the average sales revenue for the current year
-            decimal? averageSalesRevenue = recentSalesRecords.Count > 0 ? recentSalesRecords.Average(s => s.SalesProfit) : null;
-
-            return averageSalesRevenue;
-        }
 
         public IActionResult DeleteSP(int? id) //Good
         {
@@ -433,5 +272,77 @@ namespace PReMaSys.Controllers
             return View(model);
 
         }
+
+        public IActionResult SalesProfitForecast()
+        {
+            var salesData = _context.SalesPerformances.ToList();
+            var chartData = salesData.Select(x => new SalesPerformance { DateAdded = x.DateAdded, SalesProfit = x.SalesProfit }).ToList();
+            return View(chartData);
+        }
+
+        public void UpdateSalesPersonOfTheMonthAndYear()
+        {
+            // Get the current month
+            var currentMonth = DateTime.Now.Month;
+
+            // Get all distinct SalesPerson values from SalesPerformances table
+            var salesPersons = _context.SalesPerformances
+                .Where(sp => sp.DateAdded.Month == currentMonth)
+                .Select(sp => sp.SalesPerson)
+                .Distinct()
+                .ToList();
+
+            foreach (var salesPerson in salesPersons)
+            {
+                // Check if the EmployeeofThe record exists for the sales person
+                var employeeOfTheMonth = _context.EmployeeofThes.FirstOrDefault(e => e.SalesPerson == salesPerson);
+
+
+                if (employeeOfTheMonth != null)
+                {
+                    // Check if the DateModified is not in the current month
+                    if (employeeOfTheMonth.DateModified?.Month != currentMonth)
+                    {
+                        // Check if the sales person has the highest sales profit in the current month
+                        var highestSalesPerson = _context.SalesPerformances
+                            .Where(sp => sp.DateAdded.Month == currentMonth && sp.SalesPerson == salesPerson)
+                            .OrderByDescending(sp => sp.SalesProfit)
+                            .FirstOrDefault();
+
+                        if (highestSalesPerson != null)
+                        {
+                            // Update the existing EmployeeofThe record
+                            employeeOfTheMonth.EmployeeOfTheMonth += 1;
+                            employeeOfTheMonth.DateModified = DateTime.Now;
+
+                            // Check if the sales person has accumulated points for SalesPerson of the Month
+                            if (employeeOfTheMonth.EmployeeOfTheMonth % 7 == 0)
+                            {
+                                // Update the EmployeeofTheYear
+                                employeeOfTheMonth.EmployeeOfTheYear += 1;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Create a new EmployeeofThe record
+                    var newEmployeeOfTheMonth = new EmployeeofThe
+                    {
+                        SalesPerson = salesPerson,
+                        EmployeeOfTheMonth = 1,
+                        EmployeeOfTheYear = 0,
+                        DateModified = DateTime.Now
+                    };
+
+                    // Add the new record to the context
+                    _context.EmployeeofThes.Add(newEmployeeOfTheMonth);
+                }
+            }
+
+            // Save changes to the database
+            _context.SaveChanges();
+        }
+
     }
 }

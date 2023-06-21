@@ -12,8 +12,8 @@ using PReMaSys.Data;
 namespace PReMaSys.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230617120807_NewTablez")]
-    partial class NewTablez
+    [Migration("20230621031517_NewlyUpdatedManageRoles")]
+    partial class NewlyUpdatedManageRoles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -194,6 +194,9 @@ namespace PReMaSys.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsChecked")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -493,6 +496,36 @@ namespace PReMaSys.Migrations
                     b.ToTable("DomainAccount", "prms");
                 });
 
+            modelBuilder.Entity("PReMaSys.Models.EmployeeofThe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("EmployeeOfTheMonth")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EmployeeOfTheYear")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SalesPerformanceSalesID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SalesPerson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SalesPerformanceSalesID");
+
+                    b.ToTable("EmployeeofThes", "prms");
+                });
+
             modelBuilder.Entity("PReMaSys.Models.Purchase", b =>
                 {
                     b.Property<int>("PurchaseId")
@@ -572,6 +605,9 @@ namespace PReMaSys.Migrations
                     b.Property<decimal>("PointsCost")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("RewardCost")
                         .HasColumnType("decimal(18,2)");
 
@@ -580,9 +616,6 @@ namespace PReMaSys.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("inventory")
                         .HasColumnType("int");
 
                     b.HasKey("RewardsInformationId");
@@ -698,7 +731,7 @@ namespace PReMaSys.Migrations
                     b.HasIndex("SPID")
                         .IsUnique();
 
-                    b.ToTable("SalesForecasts", "prms");
+                    b.ToTable("SalesForecast", "prms");
                 });
 
             modelBuilder.Entity("PReMaSys.Models.SalesPerformance", b =>
@@ -896,6 +929,15 @@ namespace PReMaSys.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("PReMaSys.Models.EmployeeofThe", b =>
+                {
+                    b.HasOne("PReMaSys.Models.SalesPerformance", "SalesPerformance")
+                        .WithMany()
+                        .HasForeignKey("SalesPerformanceSalesID");
+
+                    b.Navigation("SalesPerformance");
                 });
 
             modelBuilder.Entity("PReMaSys.Models.Purchase", b =>

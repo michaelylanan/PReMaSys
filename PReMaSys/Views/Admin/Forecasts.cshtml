@@ -1,6 +1,10 @@
-﻿@{
+﻿@inject PReMaSys.Data.ApplicationDbContext _context;
+
+@{
     ViewData["Title"] = "Forecasts";
     Layout = "~/Views/Shared/_LayoutLoggedin.cshtml";
+
+    var getProfit = _context.SalesPerformances.ToList();
 }
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -90,20 +94,6 @@
     <p>PROFIT FORECAST</p>
 </div>
 
-<!-- INPUT DB SHEET LINK-->
-<div class="container" style="padding:40px">
-    <div class="card">
-        <div class="card-header"><b>Input SHEETDB API URL (CSV FILE)</b></div>
-        <div style="padding:10px">Create new Google Spreadsheet using this template: <a class="card-link" href="https://docs.google.com/spreadsheets/d/1G9CHymBln0ZJO38Tp3esblUh4XXRUTy71_EgqDRnqAs/edit#gid=0" target="_blank">Forecast Template</a></div>
-        <div style="padding:10px">Logged in to Convert Google Spreadsheet link to SheetDB API (CSV): <a class="card-link" href="https://sheetdb.io/apis" target="_blank">SheetDB API</a></div>
-        <div class="card-body" style="margin: 0 auto;margin-left: auto;margin-right: auto;">
-            <input type="text" placeholder="Paste SheetDB API Url Here..." id="myInput" size="50">
-            <button class="btn btn-outline-success" onclick="plotcharts()">Plot Charts</button>
-        </div>
-    </div>
-</div>
-
-
 <div class="chartCard">
     <div class="chartBox">
         <div>PROFIT FORECAST: WEEKLY</div>
@@ -130,73 +120,99 @@
     </div>
 </div>
 
+@{
+    var salesData = getProfit; // Replace with your method to retrieve data from the SalesPerformance table
+    int currentYear = DateTime.Now.Year;
+    var weeklyData = salesData
+        .Where(s => s.DateAdded >= DateTime.Today.AddDays(-6) && s.DateAdded <= DateTime.Today)
+        .GroupBy(s => s.DateAdded.Date)
+        .Select(g => new { Date = g.Key, Profit = g.Sum(s => s.SalesProfit) })
+        .OrderBy(s => s.Date)
+        .ToList();
+
+    // Calculate forecasted value
+    var lastWeekProfit = weeklyData.Skip(Math.Max(0, weeklyData.Count - 1)).Select(s => s.Profit).ToList();
+    var forecastedProfit = lastWeekProfit.Count == 1 ? lastWeekProfit[0] : 0;
+
+    weeklyData.Add(new { Date = DateTime.Today.AddDays(1), Profit = forecastedProfit });
+
+
+    var monthlyData = _context.SalesPerformances
+         .Where(s => s.DateAdded.Year == currentYear)
+         .GroupBy(s => new { Year = s.DateAdded.Year, Month = s.DateAdded.Month })
+         .Select(g => new { Year = g.Key.Year, Month = g.Key.Month, TotalProfit = g.Sum(s => s.SalesProfit) })
+         .OrderBy(d => d.Year)
+         .ThenBy(d => d.Month)
+         .ToList();
+
+    // Calculate forecasted value
+    var lastTwoMonthsProfit = monthlyData.Skip(Math.Max(0, monthlyData.Count - 2)).Select(d => d.TotalProfit).ToList();
+    var forecastedProfit2 = lastTwoMonthsProfit.Count == 2 ? (lastTwoMonthsProfit[0] + lastTwoMonthsProfit[1]) / 2 : 0;
+
+    monthlyData.Add(new { Year = currentYear, Month = DateTime.Now.Month, TotalProfit = forecastedProfit2 });
+
+
+    var last4Quarters = Enumerable.Range(0, 4)
+       .Select(offset => DateTime.Today.AddMonths(-offset * 3))
+       .Select(date => new { Year = date.Year, Quarter = (date.Month - 1) / 3 + 1 })
+       .ToList();
+
+    var quarterlyData = last4Quarters
+        .GroupJoin(salesData,
+            q => new { q.Year, q.Quarter },
+            sd => new { Year = sd.DateAdded.Year, Quarter = (sd.DateAdded.Month - 1) / 3 + 1 },
+            (q, sd) => new { q.Year, q.Quarter, Profit = sd.Sum(s => s.SalesProfit) })
+        .OrderBy(s => s.Year)
+        //.ThenBy(s => s.Quarter)
+        .ToList();
+
+    var yearlyData = salesData.Where(s => s.DateAdded >= DateTime.Today.AddYears(-1) && s.DateAdded <= DateTime.Today).ToList();
+    var yearlyGroupedData = yearlyData.GroupBy(s => s.DateAdded.Year)
+                                      .Select(g => new { Year = g.Key, Profit = g.Sum(s => s.SalesProfit) })
+                                      .OrderBy(g => g.Year)
+                                      .ToList();
+
+    // Calculate forecasted value
+    var latestYear = yearlyGroupedData.LastOrDefault();
+    var secondLatestYear = yearlyGroupedData.SkipLast(1).LastOrDefault();
+    var forecastedProfit4 = (latestYear?.Profit + secondLatestYear?.Profit) / 2;
+
+    // Add forecasted data to yearlyGroupedData
+    yearlyGroupedData.Add(new { Year = DateTime.Today.Year + 1, Profit = forecastedProfit4 });
+
+}
+
 <script type="text/javascript">
     function plotcharts() {
-        var inputVal = document.getElementById("myInput").value;
-        var apiUrl = inputVal;
-        var dateW = []
-        var profitW = [];
-        var dateM = []
-        var profitM = [];
-        var dateQ = [];
-        var profitQ = [];
-        var dateY = [];
-        var profitY = [];
-
-        var bgcolor = [
-            'rgb(79, 153, 0)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(0, 0, 0, 0.2)'
-        ];
-
-        var bordercolor = [
-            'rgb(53, 102, 0)', // line color
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(0, 0, 0, 1)'
-        ];
+        var weeklyDates = @Html.Raw(Json.Serialize(weeklyData.Select(s => s.Date == DateTime.Today ? "Forecast" : s.Date.ToString("yyyy-MM-dd"))));
+        var weeklyProfit = @Html.Raw(Json.Serialize(weeklyData.Select(s => s.Profit)));
 
 
+        var monthlyDates = @Html.Raw(Json.Serialize(monthlyData.Select(d => d.Year == currentYear && d.Month == DateTime.Now.Month ? "Next Month" : new DateTime(d.Year, d.Month, 1).ToString("MMMM"))));
+        var monthlyProfit = @Html.Raw(Json.Serialize(monthlyData.Select(d => d.TotalProfit)));
 
-        fetch(apiUrl).then(response => {
-            return response.json();
-        }).then(data => {
-            for (let i = 0; i < data.length; i++) {
-                dateW.push(data[i]['Weekly']);
-                profitW.push(parseInt(data[i]['Weekly Profit']));
-                dateM.push(data[i]['Monthly']);
-                profitM.push(data[i]['Monthly Profit']);
-                dateQ.push(data[i]['Quarterly']);
-                profitQ.push(parseInt(data[i]['Quarterly Profit']));
-                dateY.push(data[i]['Yearly']);
-                profitY.push(parseInt(data[i]['Yearly Profit']));
-            }
 
-            //For Line chart
-            dataset = addData('Weekly Profit', profitW, bgcolor, bordercolor)
-            drawchart(dataset, dateW, 'line');
+        var quarterlyDates = @Html.Raw(Json.Serialize(quarterlyData.Select(s => $"Q{s.Quarter} {s.Year}")));
+        var quarterlyProfit = @Html.Raw(Json.Serialize(quarterlyData.Select(s => s.Profit ?? 0)));
 
-            dataset = addData('Monthly Profit', profitM, bgcolor, bordercolor)
-            drawchart2(dataset, dateM, 'line');
 
-            dataset = addData('Quarterly Profit', profitQ, bgcolor, bordercolor)
-            drawchart3(dataset, dateQ, 'line');
+        var yearlyDates = @Html.Raw(Json.Serialize(yearlyGroupedData.Select(g => g.Year)));
+        var yearlyProfit = @Html.Raw(Json.Serialize(yearlyGroupedData.Select(g => g.Profit)));
 
-            dataset = addData('Yearly Profit', profitY, bgcolor, bordercolor)
-            drawchart4(dataset, dateY, 'line');
 
-        }).catch(err => {
-            console.log(err);
-        });
+        var datasetWeekly = addData('Weekly Sales Performance', weeklyProfit, 'rgb(79, 153, 0)', 'rgb(53, 102, 0)');
+        drawchart(datasetWeekly, weeklyDates, 'line');
 
+        var datasetMonthly = addData('Monthly Sales Performance', monthlyProfit, 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)');
+        drawchart2(datasetMonthly, monthlyDates, 'line');
+
+        var datasetQuarterly = addData('Quarterly Sales Performance', quarterlyProfit, 'rgba(255, 206, 86, 0.2)', 'rgba(255, 206, 86, 1)');
+        drawchart3(datasetQuarterly, quarterlyDates, 'line');
+
+        var datasetYearly = addData('Yearly Sales Performance', yearlyProfit, 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 1)');
+        drawchart4(datasetYearly, yearlyDates, 'line');
     }
+
     function addData(title, Data, bgcolor, bordercolor) {
         return [{
             label: title,
@@ -204,7 +220,6 @@
             backgroundColor: bgcolor,
             borderColor: bordercolor,
             borderWidth: 2,
-
         }];
     }
 
@@ -225,6 +240,7 @@
             }
         });
     }
+
     function drawchart2(dataset, Labels, type) {
         const ctx = document.getElementById(type + 'chart2').getContext('2d');
         const myChart = new Chart(ctx, {
@@ -242,6 +258,7 @@
             }
         });
     }
+
     function drawchart3(dataset, Labels, type) {
         const ctx = document.getElementById(type + 'chart3').getContext('2d');
         const myChart = new Chart(ctx, {
@@ -259,6 +276,7 @@
             }
         });
     }
+
     function drawchart4(dataset, Labels, type) {
         const ctx = document.getElementById(type + 'chart4').getContext('2d');
         const myChart = new Chart(ctx, {
@@ -282,4 +300,12 @@
     function printFunction() {
         window.print();
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        plotcharts();
+    });
 </script>
+
+
+
+

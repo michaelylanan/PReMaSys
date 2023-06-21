@@ -61,6 +61,8 @@ namespace PReMaSys.Controllers
         {
             var role = await _roleManager.FindByIdAsync(id);
 
+            ApplicationUser currentUser = await _userManager.GetUserAsync(HttpContext.User);
+
             if (role == null)
             {
                 ViewBag.ErrorMessage = $"No role with Id '{id}' was found";
@@ -69,12 +71,13 @@ namespace PReMaSys.Controllers
             EditRoleViewModel model = new()
             {
                 Id = role.Id,
-                RoleName = role.Name
+                RoleName = role.Name,
+                Users = new List<string>()
             };
 
             foreach (var user in _userManager.Users)
             {
-                if (await _userManager.IsInRoleAsync(user, role.Name))
+                if (await _userManager.IsInRoleAsync(user, role.Name) && user.user == currentUser)
                 {
                     model.Users.Add(user.UserName);
                 }
@@ -152,7 +155,8 @@ namespace PReMaSys.Controllers
             
             var role = await _roleManager.FindByIdAsync(roleId);
 
-            ApplicationUser user2 = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+            ApplicationUser currentUser = await _userManager.GetUserAsync(HttpContext.User);
+
             var model = new List<UserRoleViewModel>();
 
             if (role == null)
@@ -161,9 +165,11 @@ namespace PReMaSys.Controllers
                 return View("NotFound");
             }
 
-            foreach(var user in _userManager.Users)
+            var rolesz = _context.UserRoles.Where(r => r.RoleId == roleId).Select(r => r.UserId);
+
+            foreach (var user in _userManager.Users)
             {
-                if(user.user == user2)
+                if (user.user == currentUser && rolesz.Contains(user.Id) || !user.IsChecked)
                 {
 
                     var userRoleViewModel = new UserRoleViewModel
@@ -182,27 +188,7 @@ namespace PReMaSys.Controllers
                     }
 
                     model.Add(userRoleViewModel);
-                }
-               else
-                {
-                    var userRoleViewModel = new UserRoleViewModel
-                    {
-                        UserId = user.Id,
-                        UserName = user.UserName,
-                    };
-
-                    if (await _userManager.IsInRoleAsync(user, role.Name))
-                    {
-                        userRoleViewModel.IsSelected = true;
-                    }
-                    else
-                    {
-                        userRoleViewModel.IsSelected = false;
-                    }
-
-                    model.Add(userRoleViewModel);
-                }
-               
+                }               
             }
 
             return View(model);

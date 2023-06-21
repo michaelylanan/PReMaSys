@@ -17,5 +17,9 @@ namespace PReMaSys.Data
         public DateTime CompanyBday { get; set; }
         public DateTime DateAdded { get; set; } = DateTime.Now;
         public virtual ApplicationUser? user { get; set; }
+
+        public bool IsChecked { get; set; }
+
+        public DateTime? IsArchived { get; set; }
     }
 }

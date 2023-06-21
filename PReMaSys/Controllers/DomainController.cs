@@ -255,6 +255,7 @@ namespace PReMaSys.Controllers
             }
             else
             {
+                admin.IsArchived = DateTime.Now;
                 var result = await _userManager.DeleteAsync(admin);
 
                 if (result.Succeeded)

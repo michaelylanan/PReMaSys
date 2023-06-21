@@ -31,7 +31,7 @@ namespace PReMaSys.Models
         [Display(Name = "Point Cost")]
         public decimal PointsCost { get; set; }
 
-        public int inventory { get; set; }
+        public int Quantity { get; set; }
 
         public Status? Status { get; set; }
 

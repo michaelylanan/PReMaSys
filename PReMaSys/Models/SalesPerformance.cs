@@ -47,8 +47,21 @@ namespace PReMaSys.Models
         public byte[]? UserImage { get; set; }
 
         public SalesForecast SalesForecast { get; set; }
+    }
 
+    public class EmployeeofThe
+    {
+        [Key]
+        public int Id { get; set; }
+        public string? SalesPerson { get; set; }
 
+        public int? EmployeeOfTheMonth { get; set; }
+
+        public int? EmployeeOfTheYear { get; set; }
+
+        public DateTime? DateModified { get; set; }
+
+        public SalesPerformance? SalesPerformance { get; set; }
     }
 
     public class SalesForecast

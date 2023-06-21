@@ -9,6 +9,6 @@ namespace PReMaSys.ViewModel
         public bool IsSelected { get; set; }
         public virtual ApplicationUser User { get; set; }
 
-       
+        
     }
 }

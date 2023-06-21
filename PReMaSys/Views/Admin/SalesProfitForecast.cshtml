@@ -1,0 +1,310 @@
+﻿@inject PReMaSys.Data.ApplicationDbContext _context;
+
+@{
+    ViewData["Title"] = "Forecasts";
+    Layout = "~/Views/Shared/_LayoutLoggedin.cshtml";
+
+    var getProfit = _context.SalesPerformances.ToList();
+}
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+<!--Bootstrap-->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<!-- For CSV To ChartJS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+    }
+
+    .chartMenu {
+        width: auto;
+        height: auto;
+        background: #69cc00;
+        text-align: center;
+        color: white;
+    }
+
+        .chartMenu p {
+            padding: 10px;
+            font-size: 80px;
+        }
+
+    .chartCard {
+        width: auto;
+        height: auto;
+        padding: 20px;
+        background: #e6ffcc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chartBox {
+        width: 1000px;
+        padding: 20px;
+        border-radius: 20px;
+        border: solid 3px #4f9900;
+        background: white;
+    }
+
+    .chartBox2 {
+        width: auto;
+        padding: 20px;
+        border-radius: 20px;
+        border: solid 3px #4f9900;
+        background: white;
+    }
+
+    .chartjs-table, th, td {
+        border-collapse: collapse;
+        border: 1px solid green;
+        padding: 10px;
+    }
+
+    .chartjs-thead {
+        font-weight: bold;
+    }
+
+    .chartjs-tbody {
+        text-align: center;
+    }
+
+</style>
+
+<div class="back-button" style="margin-bottom:20px">
+    <a class="notificationback-link btn btn-outline-success p-2 mt-5" asp-action="ReportsPage" asp-controller="Admin" type="button">Back</a>
+    <a class="notificationback-link btn btn-outline-success p-2 mt-5" onClick="window.print()" style="width:20%">Print/Save File</a>
+</div>
+
+<div class="chartMenu">
+    <p>PROFIT FORECAST</p>
+</div>
+
+<div class="chartCard">
+    <div class="chartBox">
+        <div>PROFIT FORECAST: WEEKLY</div>
+        <canvas id="linechart" style="margin-bottom:40px"></canvas>
+    </div>
+
+</div>
+<div class="chartCard">
+    <div class="chartBox">
+        <div>PROFIT FORECAST: MONTHLY</div>
+        <canvas id="linechart2" style="margin-bottom:40px"></canvas>
+    </div>
+</div>
+<div class="chartCard">
+    <div class="chartBox">
+        <div>PROFIT FORECAST: QUARTERLY</div>
+        <canvas id="linechart3" style="margin-bottom:40px"></canvas>
+    </div>
+</div>
+<div class="chartCard">
+    <div class="chartBox">
+        <div>PROFIT FORECAST: YEARLY</div>
+        <canvas id="linechart4" style="margin-bottom:40px"></canvas>
+    </div>
+</div>
+
+@{
+    var salesData = getProfit; // Replace with your method to retrieve data from the SalesPerformance table
+    var weeklyData = salesData
+        .Where(s => s.DateAdded >= DateTime.Today.AddDays(-6) && s.DateAdded <= DateTime.Today)
+        .GroupBy(s => s.DateAdded.Date)
+        .Select(g => new { Date = g.Key, Profit = g.Sum(s => s.SalesProfit) })
+        .OrderBy(s => s.Date)
+        .ToList();
+
+    // Calculate forecasted value
+    var lastTwoWeeksProfit = weeklyData.Skip(Math.Max(0, weeklyData.Count - 2)).Select(s => s.Profit).ToList();
+    var forecastedProfit = lastTwoWeeksProfit.Count == 2 ? (lastTwoWeeksProfit[0] + lastTwoWeeksProfit[1]) / 2 : 0;
+
+    weeklyData.Add(new { Date = DateTime.Today.AddDays(1), Profit = forecastedProfit });
+
+    // Calculate monthly data
+    var monthlyData = getProfit
+        .GroupBy(s => new { Year = s.DateAdded.Year, Month = s.DateAdded.Month })
+        .Select(g => new { Year = g.Key.Year, Month = g.Key.Month, TotalProfit = g.Sum(s => s.SalesProfit) })
+        .OrderBy(d => d.Year)
+        .ThenBy(d => d.Month)
+        .ToList();
+
+    // Calculate forecasted value
+    var lastTwoMonthsProfit = monthlyData.Skip(Math.Max(0, monthlyData.Count - 2)).Select(d => d.TotalProfit).ToList();
+    var forecastedProfit2 = lastTwoMonthsProfit.Count == 2 ? (lastTwoMonthsProfit[0] + lastTwoMonthsProfit[1]) / 2 : 0;
+
+    monthlyData.Add(new { Year = 0, Month = 0, TotalProfit = forecastedProfit2 }); // Add forecast data with zero values for Year and Month
+
+
+
+    var last4Quarters = Enumerable.Range(0, 4)
+       .Select(offset => DateTime.Today.AddMonths(-offset * 3))
+       .Select(date => new { Year = date.Year, Quarter = (date.Month - 1) / 3 + 1 })
+       .ToList();
+
+    var quarterlyData = last4Quarters
+        .GroupJoin(salesData,
+            q => new { q.Year, q.Quarter },
+            sd => new { Year = sd.DateAdded.Year, Quarter = (sd.DateAdded.Month - 1) / 3 + 1 },
+            (q, sd) => new { q.Year, q.Quarter, Profit = sd.Sum(s => s.SalesProfit) })
+        .OrderBy(s => s.Year)
+        .ThenBy(s => s.Quarter)
+        .ToList();
+
+    var yearlyData = salesData.Where(s => s.DateAdded >= DateTime.Today.AddYears(-1) && s.DateAdded <= DateTime.Today).ToList();
+    var yearlyGroupedData = yearlyData.GroupBy(s => s.DateAdded.Year)
+                                      .Select(g => new { Year = g.Key, Profit = g.Sum(s => s.SalesProfit) })
+                                      .OrderBy(g => g.Year)
+                                      .ToList();
+
+    // Calculate forecasted value
+    var latestYear = yearlyGroupedData.LastOrDefault();
+    var secondLatestYear = yearlyGroupedData.SkipLast(1).LastOrDefault();
+    var forecastedProfit4 = (latestYear?.Profit + secondLatestYear?.Profit) / 2;
+
+    // Add forecasted data to yearlyGroupedData
+    yearlyGroupedData.Add(new { Year = DateTime.Today.Year + 1, Profit = forecastedProfit4 });
+
+}
+
+<script type="text/javascript">
+    function plotcharts() {
+        var weeklyDates = @Html.Raw(Json.Serialize(weeklyData.Select(s => s.Date == DateTime.Today ? "Forecast" : s.Date.ToString("yyyy-MM-dd"))));
+        var weeklyProfit = @Html.Raw(Json.Serialize(weeklyData.Select(s => s.Profit)));
+
+
+        var monthlyDates = @Html.Raw(Json.Serialize(monthlyData.Select(d => d.Year == 0 && d.Month == 0 ? "Next Month" : new DateTime(d.Year, d.Month, 1).ToString("yyyy-MM-dd"))));
+        var monthlyProfit = @Html.Raw(Json.Serialize(monthlyData.Select(d => d.TotalProfit)));
+    
+
+        var quarterlyDates = @Html.Raw(Json.Serialize(quarterlyData.Select(s => $"Q{s.Quarter} {s.Year}").OrderBy(s => s)));
+        var quarterlyProfit = @Html.Raw(Json.Serialize(quarterlyData.Select(s => s.Profit ?? 0).OrderBy(s => s)));
+
+
+        var yearlyDates = @Html.Raw(Json.Serialize(yearlyGroupedData.Select(g => g.Year)));
+    var yearlyProfit = @Html.Raw(Json.Serialize(yearlyGroupedData.Select(g => g.Profit)));
+
+
+        var datasetWeekly = addData('Weekly Sales Performance', weeklyProfit, 'rgb(79, 153, 0)', 'rgb(53, 102, 0)');
+        drawchart(datasetWeekly, weeklyDates, 'line');
+
+        var datasetMonthly = addData('Monthly Sales Performance', monthlyProfit, 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)');
+        drawchart2(datasetMonthly, monthlyDates, 'line');
+
+        var datasetQuarterly = addData('Quarterly Sales Performance', quarterlyProfit, 'rgba(255, 206, 86, 0.2)', 'rgba(255, 206, 86, 1)');
+        drawchart3(datasetQuarterly, quarterlyDates, 'line');
+
+        var datasetYearly = addData('Yearly Sales Performance', yearlyProfit, 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 1)');
+        drawchart4(datasetYearly, yearlyDates, 'line');
+    }
+
+    function addData(title, Data, bgcolor, bordercolor) {
+        return [{
+            label: title,
+            data: Data,
+            backgroundColor: bgcolor,
+            borderColor: bordercolor,
+            borderWidth: 2,
+        }];
+    }
+
+    function drawchart(dataset, Labels, type) {
+        const ctx = document.getElementById(type + 'chart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: type,
+            data: {
+                labels: Labels,
+                datasets: dataset,
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    function drawchart2(dataset, Labels, type) {
+        const ctx = document.getElementById(type + 'chart2').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: type,
+            data: {
+                labels: Labels,
+                datasets: dataset
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    function drawchart3(dataset, Labels, type) {
+        const ctx = document.getElementById(type + 'chart3').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: type,
+            data: {
+                labels: Labels,
+                datasets: dataset
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    function drawchart4(dataset, Labels, type) {
+        const ctx = document.getElementById(type + 'chart4').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: type,
+            data: {
+                labels: Labels,
+                datasets: dataset
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+<script>
+    function printFunction() {
+        window.print();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        plotcharts();
+    });
+</script>
+
+
+
+
