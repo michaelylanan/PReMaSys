@@ -3,107 +3,14 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-
-<style>
-    .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-        color: white;
-        background-color: green;
-    }
-
-    .btn-primary {
-        color: white;
-        background-color: green;
-        border-color: green;
-    }
-
-    a:visited {
-        color: black;
-        background-color: transparent;
-        text-decoration: none;
-    }
-
-    a.btn-outline-success {
-        color: green;
-    }
-
-    a.logoname {
-        color: white;
-    }
-</style>
 <ul class="nav nav-pills flex-column">
-    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Domain"))
-    {
-        <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Update Profile</a></li>
-        <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
-        <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
-        <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-        <li class="nav-item mx-auto w-50"><a class="btn btn-outline-success mt-3  w-100" asp-controller="Domain" asp-action="ReportsPage">Back</a></li>
-    }
-    else if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-    {
-        <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Update Profile</a></li>
-        <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-        <li class="nav-item mx-auto w-50"><a class="btn btn-outline-success mt-3 w-100" asp-controller="Admin" asp-action="ReportsPage">Back</a></li>
-    }
-    else if (SignInManager.IsSignedIn(User) && User.IsInRole("Support"))
-    {
-        <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Update Profile</a></li>
-        <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-        <li class="nav-item mx-auto w-50"><a class="btn btn-outline-success mt-3  w-100" asp-controller="SupportAdmin" asp-action="SupportPage">Back</a></li>
-    }
-    else if (SignInManager.IsSignedIn(User) && User.IsInRole("Sales"))
-    {
-        <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Update Profile</a></li>
-        <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-        <li class="nav-item mx-auto w-50"><a class="btn btn-outline-success mt-3 w-100" asp-controller="Employee" asp-action="EmployeeHomePage">Back</a></li>
-    }
-    else if (SignInManager.IsSignedIn(User) && User.IsInRole("Super"))
-    {
-        <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Update Profile</a></li>
-        <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
-        <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
-        <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-        <li class="nav-item mx-auto w-50"><a class="btn btn-outline-success mt-3  w-100" asp-controller="Manage" asp-action="ListAllRoles">Back</a></li>
-    }
-
-
-@*   <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Update Profile</a></li>
-    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Sales"))
-    {
-        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Update Profile</a></li>
-    }
+    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
-    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Sales"))
-    {
-        <li class="nav-item mx-auto w-50"><a class="btn btn-outline-success mt-3 w-100" asp-controller="Employee" asp-action="EmployeeHomePage">Back</a></li>
-    }
-    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-    {
-        <li class="nav-item mx-auto w-50"><a class="btn btn-outline-success mt-3 w-100" asp-controller="Admin" asp-action="AdminDashboard">Back</a></li>
-    }
-    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Domain"))
-    {
-        <li class="nav-item mx-auto w-50"><a class="btn btn-outline-success mt-3  w-100" asp-controller="Domain" asp-action="DomainPage">Back</a></li>
-    }
-    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Support"))
-    {
-        <li class="nav-item mx-auto w-50"><a class="btn btn-outline-success mt-3  w-100" asp-controller="SupportAdmin" asp-action="SupportPage">Back</a></li>
-    }*@
-
-
     @if (hasExternalLogins)
     {
         <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
     }
-
-
-
-@*  <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>*@
+    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
 </ul>
-
-@*@if (SignInManager.IsSignedIn(User) && User.IsInRole("Sales"))
-{
-    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Update Profile</a></li>
-}*@

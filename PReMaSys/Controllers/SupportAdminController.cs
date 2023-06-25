@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using OfficeOpenXml;
 using PReMaSys.Data;
 using PReMaSys.Models;
 using PReMaSys.ViewModel;
@@ -349,5 +350,118 @@ namespace PReMaSys.Controllers
 
             return RedirectToAction("RewardsRecord");
         }
+
+        [HttpPost]
+        public IActionResult UploadExcel(IFormFile file)
+        {
+            ApplicationUser userz = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+
+            if (file == null || file.Length <= 0)
+            {
+                TempData["ResultMessage"] = "No file uploaded.";
+                return View("SERecord");
+            }
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Set the LicenseContext property
+
+            DataTable userData = ExtractDataFromExcel(file);
+
+            if (userData == null || userData.Rows.Count == 0)
+            {
+                TempData["ResultMessage"] = "No data found in the uploaded file.";
+                return View("SERecord");
+            }
+
+            foreach (DataRow row in userData.Rows)
+            {
+                string email = row["Email"].ToString();
+                string password = row["Password"].ToString();
+
+                ApplicationUser user = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                    EmailConfirmed = true,
+                    user = userz
+                };
+
+                var result = _userManager.CreateAsync(user, password).Result;
+                
+                var latest = user.Id;
+                var getId = _context.ApplicationUsers.FirstOrDefault(u => u.Id == latest);
+
+                if (result.Succeeded)
+                {
+                    SERecord seRecord = new SERecord
+                    {
+                        SERId = getId,
+                        EmployeeNo = row["EmployeeNo"].ToString(),
+                        EmployeeFirstname = row["EmployeeFirstname"].ToString(),
+                        EmployeeLastname = row["EmployeeLastname"].ToString(),
+                        EmployeeAddress = row["EmployeeAddress"].ToString(),
+                        EmployeeBirthdate = row["EmployeeBirthdate"].ToString()
+                    };
+
+                    _context.SERecord.Add(seRecord);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+
+            TempData["ResultMessage"] = "File uploaded and data imported successfully.";
+            return View("SERecord");
+        }
+
+        private DataTable ExtractDataFromExcel(IFormFile file)
+        {
+            DataTable data = new DataTable();
+
+            using (var stream = new MemoryStream())
+            {
+                file.CopyTo(stream);
+                using (var package = new ExcelPackage(stream))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                    data = ConvertExcelWorksheetToDataTable(worksheet);
+                }
+            }
+
+            return data;
+        }
+
+        private DataTable ConvertExcelWorksheetToDataTable(ExcelWorksheet worksheet)
+        {
+            DataTable dataTable = new DataTable();
+
+            for (int row = 1; row <= worksheet.Dimension.End.Row; row++)
+            {
+                if (row == 1)
+                {
+                    for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+                    {
+                        dataTable.Columns.Add(worksheet.Cells[row, col].Value.ToString());
+                    }
+                }
+                else
+                {
+                    DataRow dataRow = dataTable.NewRow();
+                    for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+                    {
+                        dataRow[col - 1] = worksheet.Cells[row, col].Value;
+                    }
+
+                    dataTable.Rows.Add(dataRow);
+                }
+            }
+
+            return dataTable;
+        }
     }
 }
+

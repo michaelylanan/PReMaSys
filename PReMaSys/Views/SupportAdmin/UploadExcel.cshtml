@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "UploadExcel";
+    Layout = "~/Views/Shared/SupportAdminDash.cshtml";
+}
+
+<div class="container">
+    <h1 class="text-center mt-5 mb-5">Upload Excel</h1>
+    <h5 class="text-success">@TempData["ResultMessage"]</h5>
+    <form asp-action="UploadExcel" asp-controller="SupportAdmin" enctype="multipart/form-data">
+        <div class="form-group mb-3 mt-3">
+            <label for="fileInput" class="form-label">Select Excel File:</label>
+            <input type="file" name="file" id="fileInput" class="form-control" required />
+        </div>
+        <div class="form-group mb-3 mt-4">
+            <input type="submit" value="Upload File" class="btn btn-primary" required />
+            <a asp-action="SERecord" class="btn btn-outline-secondary">Back to SERecord</a>
+        </div>
+    </form>
+</div>
