@@ -18,7 +18,7 @@ namespace PReMaSys.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("prms")
-                .HasAnnotation("ProductVersion", "6.0.10")
+                .HasAnnotation("ProductVersion", "6.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -311,6 +311,9 @@ namespace PReMaSys.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Category")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<string>("RewardDescription")

@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using PReMaSys.Data;
 
 using PReMaSys.Models;
+using PReMaSys.ViewModel;
 
+using System.Linq;
 
 namespace PReMaSys.Controllers
 {
@@ -22,7 +24,22 @@ namespace PReMaSys.Controllers
         }
         public IActionResult EmployeeRank()
         {
-            return View();
+            // Retrieve all sales performances
+            var allPerformances = _context.SalesPerformances.ToList();
+
+            // Combine the data for sales performances with the same salesperson
+            var combinedPerformances = allPerformances
+                .GroupBy(s => s.SalesPerson)
+                .Select(g => new SalesPerformance
+                {
+                    SalesPerson = g.Key,
+                    UnitsSold = g.Sum(s => s.UnitsSold),
+                    SalesRevenue = g.Sum(s => s.SalesRevenue),
+                    SalesProfit = g.Sum(s => s.SalesProfit)
+                })
+                .ToList();
+
+            return View(combinedPerformances);
         }
 
         public IActionResult ContactUs()
@@ -136,10 +153,6 @@ namespace PReMaSys.Controllers
         {
             ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
 
-            /*// this retrieves the foreign key id from customer table
-            var latestCId = _context.Customers.FirstOrDefault(c => c.ApplicationUser == user).CustomerId;
-            Customer cust = _context.Customers.FirstOrDefault(c => c.CustomerId == latestCId);*/
-
             Rewards reward = _context.Rewards.Where(r => r.RewardsInformationId == id).SingleOrDefault();
 
 
@@ -152,34 +165,16 @@ namespace PReMaSys.Controllers
             cart.Category = reward.Category;
             cart.RewardDescription = reward.Description;
             cart.RewardPrice = reward.PointsCost;
-            cart.TotalCost = reward.PointsCost;
-
+            
+            cart.Quantity = Convert.ToInt32(qty);
+            cart.TotalCost = reward.PointsCost * Convert.ToInt32(qty);
             _context.AddToCart.Add(cart);
             _context.SaveChanges();
 
             return RedirectToAction("EmployeeHomePage");
         }
 
-        ////Delete Item from Cart
-        //public IActionResult DeleteItem(int? id)
-        //{
 
-        //    if (id == null)
-        //    {
-        //        return RedirectToAction("AddToCartDisplay");
-        //    }
-
-        //    var cart = _context.AddToCart.Where(i => i.CartId == id).SingleOrDefault();
-        //    if (cart == null)
-        //    {
-        //        return RedirectToAction("AddToCartDisplay");
-        //    }
-
-        //    _context.AddToCart.Remove(cart);
-        //    _context.SaveChanges();
-
-        //    return RedirectToAction("AddToCartDisplay");
-        //}
         // Delete Item from Cart
         public IActionResult DeleteItem(int? id)
         {
@@ -227,6 +222,7 @@ namespace PReMaSys.Controllers
             AddToCart purchase = _context.AddToCart.Where(c => c.CartId == id).SingleOrDefault();
             return View(purchase);
         }
+
         [HttpPost]
         public IActionResult Purchase(Purchase record, int id)
         {
@@ -242,7 +238,6 @@ namespace PReMaSys.Controllers
             {
                 purchase.ApplicationUser = user;
                 purchase.EmployeeName = user.UserName;
-                purchase.AddToCart = addCart;
                 purchase.RewardImage = addCart.RewardImage;
                 purchase.RewardName = addCart.RewardName;
                 purchase.RewardPrice = addCart.RewardPrice;
@@ -254,8 +249,6 @@ namespace PReMaSys.Controllers
 
                 var SEmployees = _context.SERecord.Where(s => s.SERId == user).SingleOrDefault();
                 SEmployees.EmployeePoints = temp.ToString();
-
-
 
                 _context.SERecord.Update(SEmployees);
                 _context.Purchase.Add(purchase);
@@ -287,7 +280,7 @@ namespace PReMaSys.Controllers
 
             foreach (var item in addCart)
             {
-                totalPayment += item.RewardPrice;
+                totalPayment += item.TotalCost;
             }
 
             if (cpoints >= totalPayment)
@@ -298,17 +291,16 @@ namespace PReMaSys.Controllers
                     {
                         ApplicationUser = user,
                         EmployeeName = user.UserName,
-                        AddToCart = item,
                         RewardImage = item.RewardImage,
                         RewardName = item.RewardName,
                         RewardPrice = item.RewardPrice,
-                        TotalPayment = item.RewardPrice,
+                        TotalPayment = item.TotalCost,
                         DateAdded = DateTime.Now,
                         Stat = record.Stat
-                        
+
                     };
 
-                    cpoints -= item.RewardPrice;
+                    cpoints -= item.TotalCost;
 
                     _context.Purchase.Add(purchase);
                     _context.AddToCart.Remove(item);

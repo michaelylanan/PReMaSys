@@ -148,51 +148,52 @@ namespace PReMaSys.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> EditUsersInRole (string roleId)
-        {
-            ViewBag.roleId = roleId;   
+            [HttpGet]
+            public async Task<IActionResult> EditUsersInRole (string roleId)
+            {
+                ViewBag.roleId = roleId;   
             
-            var role = await _roleManager.FindByIdAsync(roleId);
+                var role = await _roleManager.FindByIdAsync(roleId);
 
-            ApplicationUser currentUser = await _userManager.GetUserAsync(HttpContext.User);
+                //ApplicationUser currentUser = await _userManager.GetUserAsync(HttpContext.User);
+                var cUser = await _userManager.GetUserAsync(User);
 
-            var model = new List<UserRoleViewModel>();
+                var model = new List<UserRoleViewModel>();
 
-            if (role == null)
-            {
-                ViewBag.ErrorMessage = $"Role with Id '{roleId}' cannot be found";
-                return View("NotFound");
-            }
-
-            var rolesz = _context.UserRoles.Where(r => r.RoleId == roleId).Select(r => r.UserId);
-
-            foreach (var user in _userManager.Users)
-            {
-                if (user.user == currentUser && rolesz.Contains(user.Id) || !user.IsChecked)
+                if (role == null)
                 {
+                    ViewBag.ErrorMessage = $"Role with Id '{roleId}' cannot be found";
+                    return View("NotFound");
+                }
 
-                    var userRoleViewModel = new UserRoleViewModel
-                    {
-                        UserId = user.Id,
-                        UserName = user.UserName,
-                    };
+                var rolesz = _context.UserRoles.Where(r => r.RoleId == roleId).Select(r => r.UserId);
 
-                    if (await _userManager.IsInRoleAsync(user, role.Name))
+                foreach (var user in _userManager.Users)
+                {
+                    if (user.user == cUser && rolesz.Contains(user.Id) || !user.IsChecked && user.user == cUser)
                     {
-                        userRoleViewModel.IsSelected = true;
-                    }
-                    else
-                    {
-                        userRoleViewModel.IsSelected = false;
-                    }
 
-                    model.Add(userRoleViewModel);
-                }               
+                        var userRoleViewModel = new UserRoleViewModel
+                        {
+                            UserId = user.Id,
+                            UserName = user.UserName,
+                        };
+
+                        if (await _userManager.IsInRoleAsync(user, role.Name))
+                        {
+                            userRoleViewModel.IsSelected = true;
+                        }
+                        else
+                        {
+                            userRoleViewModel.IsSelected = false;
+                        }
+
+                        model.Add(userRoleViewModel);
+                    }               
+                }
+
+                return View(model);
             }
-
-            return View(model);
-        }
 
         [HttpPost]
         public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string roleId)

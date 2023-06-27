@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<SalesPerformance>
+@{
      Layout = "~/Views/Shared/_LayoutEmployeeLoggedin.cshtml";
     ViewData["Title"] = "Ranking Page";
  
@@ -7,36 +8,25 @@
 <h1 class="page-title-header text-center mt-5"> Employee Rankings</h1>
 
 <table class="table table-hover border-success text-center mt-5" id="ranktable">
-<thead>
-  <tr>
-    <th> Ranking</th>
-    <th>Employee </th>
-    <th> Sales </th>
-    <th>Profit</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td> 1st </td>
-    <td><img src="/img/mike.png" class="person-img" alt="person"></td>
-    <td>Php 1.5M</td>
-    <td>Php 800k</td>
-  </tr>
-
-   <tr>
-    <td> 2nd </td>
-   <td><img src="/img/mig.png" class="person-img" alt="person"></td>
-    <td>Php 1.8M</td>
-    <td>Php 700k</td>
-  </tr>
-
-  <tr>
-    <td> 3rd </td>
-            <td><img src="\img\miguel-magallanes.jpg" class="person-img" alt="person"></td>
-    <td>Php 1.5M</td>
-    <td>Php 800k</td>
-  </tr>
-  </tbody>
+    <thead>
+        <tr>
+            <th>Sales Person</th>
+            <th>Units Sold</th>
+            <th>Sales Revenue</th>
+            <th>Sales Profit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var performance in Model)
+        {
+            <tr>
+                <td>@performance.SalesPerson</td>
+                <td>@performance.UnitsSold</td>
+                <td>@performance.SalesRevenue</td>
+                <td>@performance.SalesProfit</td>
+            </tr>
+        }
+    </tbody>
 </table>
 
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>

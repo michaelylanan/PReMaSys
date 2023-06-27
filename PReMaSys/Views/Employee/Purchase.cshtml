@@ -16,6 +16,9 @@
             @Html.AntiForgeryToken()
 
             <h1 class="text-center mt-5">Rewards Purchased</h1>
+            <li class="list-group-item border-success">
+                <h4>Quantity: @ViewBag.RewardQuantity</h4>
+            </li>
             <div class="card addToCart-card border border-success mx-auto border-2 mt-5 mb-3">
                 <div class="card-body mx-auto">
                     <img src="@Url.Content(Model.RewardImage)" class="card-img-top" alt="...">
@@ -27,6 +30,14 @@
                     <li class="list-group-item border-success">
                         <h4>Reward Price: @Model.RewardPrice</h4>
                     </li>
+                    <li class="list-group-item border-success">
+                        <h4>Quantity: @Model.Quantity</h4>
+                    </li>
+                    <li class="list-group-item border-success">
+                        <h4>Total Cost: @Model.TotalCost</h4>
+                    </li>
+
+
                     <li class="list-group-item text-center border-success">
                         <div>
                             <button type="submit" class="btn btn-success">Submit</button>

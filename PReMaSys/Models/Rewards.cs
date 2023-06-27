@@ -31,6 +31,7 @@ namespace PReMaSys.Models
         [Display(Name = "Point Cost")]
         public decimal PointsCost { get; set; }
 
+        [Range(0, int.MaxValue, ErrorMessage = "Invalid Quantity")]
         public int Quantity { get; set; }
 
         public Status? Status { get; set; }
@@ -84,6 +85,9 @@ namespace PReMaSys.Models
 
         [Display(Name = "Total Cost")]
         public decimal TotalCost { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "Invalid Quantity.")]
+        public int Quantity { get; set; }
     }
 
 }

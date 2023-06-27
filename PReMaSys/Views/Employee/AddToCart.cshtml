@@ -18,6 +18,12 @@
     <li class="list-group-item border-success"><h4>Reward Category: @Model.Category</h4></li>
     <li class="list-group-item border-success"><h4>Reward Description: @Model.Description</h4></li>
     <li class="list-group-item border-success"> <h4>Reward Points Cost: @Model.PointsCost</h4></li>
+            <li class="list-group-item text-center border-success">
+                <div>
+                    <label for="qty">Quantity:</label>
+                    <input type="number" name="qty" id="qty" value="1" min="1" required class="form-control" />
+                </div>
+            </li>
     <li class="list-group-item text-center border-success ">
      <div>
           <input type="submit" value="Add to Redeem List" class="btn add-to-cart-btn btn-success"/>
