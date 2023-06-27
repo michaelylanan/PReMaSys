@@ -1,5 +1,6 @@
 ﻿@page
 @model RegisterModel
+@using PReMaSys.Data
 @{
     ViewData["Title"] = "Register";
      Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,6 +21,66 @@
                             <input asp-for="Input.CompanyName" class="form-control" autocomplete="FullName" aria-required="true" />
                             <label asp-for="Input.CompanyName"></label>
                             <span asp-validation-for="Input.CompanyName" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.CompanyAddress" class="form-control" autocomplete="FullName" aria-required="true" />
+                            <label asp-for="Input.CompanyAddress"></label>
+                            <span asp-validation-for="Input.CompanyAddress" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.CompanyEmail " class="form-control" autocomplete="FullName" aria-required="true" />
+                            <label asp-for="Input.CompanyEmail "></label>
+                            <span asp-validation-for="Input.CompanyEmail " class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.CompanyWebsite " class="form-control" autocomplete="FullName" aria-required="true" />
+                            <label asp-for="Input.CompanyWebsite "></label>
+                            <span asp-validation-for="Input.CompanyWebsite " class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.CompanyAffiliation " class="form-control" autocomplete="FullName" aria-required="true" />
+                            <label asp-for="Input.CompanyAffiliation "></label>
+                            <span asp-validation-for="Input.CompanyAffiliation " class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.NumberOfEmployees " class="form-control" autocomplete="FullName" aria-required="true" />
+                            <label asp-for="Input.NumberOfEmployees "></label>
+                            <span asp-validation-for="Input.NumberOfEmployees " class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.NatureOfBusiness  " class="form-control" autocomplete="FullName" aria-required="true" />
+                            <label asp-for="Input.NatureOfBusiness  "></label>
+                            <span asp-validation-for="Input.NatureOfBusiness  " class="text-danger"></span>
+                        </div>
+
+                        <!--TO FIX-->
+                        <div class="form-floating mb-3">
+                            <select asp-for="Input.BusinessType" class="form-control">
+                                <option value="">-- Select Business Type --</option>
+                                @foreach (var item in Enum.GetValues(typeof(BusinessType)))
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </select>
+                            <label asp-for="Input.BusinessType"></label>
+                            <span asp-validation-for="Input.BusinessType" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.SECNumber   " class="form-control" autocomplete="FullName" aria-required="true" />
+                            <label asp-for="Input.SECNumber   "></label>
+                            <span asp-validation-for="Input.SECNumber   " class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.BusinessPNumber   " class="form-control" autocomplete="FullName" aria-required="true" />
+                            <label asp-for="Input.BusinessPNumber   "></label>
+                            <span asp-validation-for="Input.BusinessPNumber   " class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.BIRTIN   " class="form-control" autocomplete="FullName" aria-required="true" />
+                            <label asp-for="Input.BIRTIN   "></label>
+                            <span asp-validation-for="Input.BIRTIN   " class="text-danger"></span>
                         </div>
                         <div class="form-floating mb-3">
                             <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />

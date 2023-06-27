@@ -59,6 +59,11 @@ namespace PReMaSys.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
+            [EmailAddress]
+            [Display(Name = "Company Email")]
+            public string CompanyEmail { get; set; }
+
+            [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
@@ -70,12 +75,54 @@ namespace PReMaSys.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [Required]
-            [StringLength(25, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 5)]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 5)]
             [Display(Name = "Company Name")]
             public string CompanyName { get; set; }
 
             [Display(Name = "Company Logo")]
             public byte[] Pic { get; set; }
+
+            [Required]
+            [Display(Name = "Company Address")]
+            public string CompanyAddress { get; set; }
+
+            [Required]
+            [Display(Name = "Company Website")]
+            public string CompanyWebsite { get; set; }
+
+            [Required]
+            [DataType(DataType.DateTime)]
+            [Display(Name = "Company Address")]
+            public DateTime CompanyBday { get; set; }
+
+            [Required]
+            [Display(Name = "Company Affiliation")]
+            public string CompanyAffiliation { get; set; }
+
+            [Required]
+            [Display(Name = "Number Of Employees")]
+            [Range(1, 1000, ErrorMessage = "The {0} must be between {1} and {2}.")]
+            public int NumberOfEmployees { get; set; }
+
+            [Required]
+            [Display(Name = "Nature Of Business")]
+            public string NatureOfBusiness { get; set; }
+
+            [Required]
+            [Display(Name = "Business Type")]
+            public string BusinessType { get; set; }
+
+            [Required]
+            [Display(Name = "Security Exchange Commission Number")]
+            public string SECNumber { get; set; }
+
+            [Required]
+            [Display(Name = "Business Permit Number")]
+            public string BusinessPNumber { get; set; }
+
+            [Required]
+            [Display(Name = "B.I.R. TIN Registration Number")]
+            public string BIRTIN { get; set; }
 
         }
 
@@ -107,10 +154,18 @@ namespace PReMaSys.Areas.Identity.Pages.Account
                     }
                 }
 
-       /*         user.CompanyAddress = Input.CompanyAddress;
+                user.CompanyAddress = Input.CompanyAddress;
+                user.CompanyWebsite = Input.CompanyWebsite;
+                user.CompanyEmail = Input.CompanyEmail;
+                user.CompanyBday = Input.CompanyBday;
                 user.CompanyAffiliation = Input.CompanyAffiliation;
+                user.NumberOfEmployees = Input.NumberOfEmployees;
                 user.NatureOfBusiness = Input.NatureOfBusiness;
-                user.CompanyBday = Input.CompanyBday;*/
+                user.BusinessType = Input.BusinessType;
+                user.SECNumber = Input.SECNumber;
+                user.BusinessPNumber = Input.BusinessPNumber;
+                user.BIRTIN = Input.BIRTIN;
+
                 user.DateAdded = DateTime.Now;
 
 

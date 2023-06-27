@@ -168,6 +168,15 @@ namespace PReMaSys.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("BIRTIN")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BusinessPNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BusinessType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CompanyAddress")
                         .HasColumnType("nvarchar(max)");
 
@@ -177,7 +186,13 @@ namespace PReMaSys.Migrations
                     b.Property<DateTime>("CompanyBday")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("CompanyEmail")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyWebsite")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -217,6 +232,9 @@ namespace PReMaSys.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int?>("NumberOfEmployees")
+                        .HasColumnType("int");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -228,6 +246,9 @@ namespace PReMaSys.Migrations
 
                     b.Property<byte[]>("Pic")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("SECNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -838,6 +859,9 @@ namespace PReMaSys.Migrations
 
                     b.Property<string>("EmployeePoints")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("IsArchived")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SERIdId")
                         .HasColumnType("nvarchar(450)");

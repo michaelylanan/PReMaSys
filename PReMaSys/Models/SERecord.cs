@@ -47,6 +47,8 @@ namespace PReMaSys.Models
 
         [Display(Name = "Date Modified")]
         public DateTime? DateModified { get; set; }
+
+        public DateTime? IsArchived { get; set; }
     }
 }
 

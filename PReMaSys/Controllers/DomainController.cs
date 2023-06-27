@@ -133,7 +133,7 @@ namespace PReMaSys.Controllers
         public IActionResult ListAdminRoles()
         {
             ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
-            var list = _context.Users.Where(c => c.user == user).ToList();
+            var list = _context.Users.Where(c => c.user == user && c.IsArchived == null).ToList();
             return View(list);
         }
 
@@ -281,7 +281,7 @@ namespace PReMaSys.Controllers
             else
             {
                 admin.IsArchived = DateTime.Now;
-                var result = await _userManager.DeleteAsync(admin);
+                var result = await _userManager.UpdateAsync(admin);
 
                 if (result.Succeeded)
                 {

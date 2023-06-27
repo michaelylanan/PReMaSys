@@ -93,7 +93,7 @@ namespace PReMaSys.Controllers
         public IActionResult ListSalesEmployee() //Good
         {
             ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
-            var list = _context.Users.Where(c => c.user == user).ToList();
+            var list = _context.Users.Where(c => c.user == user && c.IsArchived == null).ToList();
             return View(list);
         }
 
@@ -158,8 +158,8 @@ namespace PReMaSys.Controllers
             /*var check = _context.SERecord.FirstOrDefault(s => s.SERId == se).SEmployeeRecordsID;
             rec = _context.SERecord.FirstOrDefault(r => r.SEmployeeRecordsID == check);*/
 
-            /*var check = _context.SERecord.FirstOrDefault(s => s.SERId == se).SEmployeeRecordsID;*/
-            var emp = _context.SERecord.Where(s => s.SERId == se).SingleOrDefault();
+            var userRecord = await _context.Users.FindAsync(se.Id);
+            var emp = _context.SERecord.SingleOrDefault(s => s.SERId == userRecord);
 
             if (User == null)
             {
@@ -168,10 +168,17 @@ namespace PReMaSys.Controllers
             }
             else
             {
-                var result = await _userManager.DeleteAsync(se);
+                se.IsArchived = DateTime.Now;
+                var result = await _userManager.UpdateAsync(se);
+
+               
+
 
                 if (result.Succeeded)
                 {
+                    emp.IsArchived = DateTime.Now;
+                    _context.SERecord.Update(emp);
+                    await _context.SaveChangesAsync();
                     return RedirectToAction("ListSalesEmployee");
                 }
 
