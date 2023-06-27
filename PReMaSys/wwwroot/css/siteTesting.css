@@ -143,13 +143,22 @@ ul.navbar-list {
     /* background-color:rgb(82,158,90, 0.2);*/
     /*width:500px;*/
 }
+/*
+    .register-form{
+        width:580px;
+    }*/
 
-.form-login, .form-register {
-   width:992px;
-}
+    .form-login, .form-register {
+        width: 992px;
+    }
 
 .login-pic-bg {
     height: 650px;
+    width: 50%;
+}
+
+.register-pic-bg {
+    height: 985px;
     width: 50%;
 }
 
