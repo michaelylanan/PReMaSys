@@ -3,18 +3,19 @@
 @using PReMaSys.Data
 @{
     ViewData["Title"] = "Register";
-     Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="d-flex whole-register-form align-items-center justify-content-center" style="min-height:calc(100vh - 105px)">
     <div class="d-flex form-register mt-3 mb-3">
-    <img src="~/img/registerimage.png" class="register-pic-bg" alt=""/>
-        <div class="d-flex align-items-center register-form w-lg-50 w-100 px-5">@* w-lg-50 w-100*@
+        <img src="~/img/registerimage.png" class="register-pic-bg" alt="" />
+        <div class="d-flex align-items-center register-form w-lg-50 w-100 px-5">
+            @* w-lg-50 w-100*@
             <form id="registerForm" class="W-100" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
-                 <h1>@ViewData["Title"]</h1>
-                        <h4>Create a new accounts.</h4>
-                        <hr />
-         @*   <div class="d-flex">*@
+                <h1>@ViewData["Title"]</h1>
+                <h4>Create a new accounts.</h4>
+                <hr />
+                @*   <div class="d-flex">*@
                 <div class="row">
                     <div class="col-md-6">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -23,15 +24,15 @@
                             <label asp-for="Input.CompanyName"></label>
                             <span asp-validation-for="Input.CompanyName" class="text-danger"></span>
                         </div>
-                     </div>
-                      <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="Input.CompanyAddress" class="form-control" autocomplete="FullName" aria-required="true" />
                             <label asp-for="Input.CompanyAddress"></label>
                             <span asp-validation-for="Input.CompanyAddress" class="text-danger"></span>
                         </div>
-                      </div>
-                     <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="Input.CompanyEmail " class="form-control" autocomplete="FullName" aria-required="true" />
                             <label asp-for="Input.CompanyEmail "></label>
@@ -44,29 +45,29 @@
                             <label asp-for="Input.CompanyWebsite "></label>
                             <span asp-validation-for="Input.CompanyWebsite " class="text-danger"></span>
                         </div>
-                     </div>
-                       <div class="col-md-6">
-                    <div class="form-floating mb-3">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
                             <input asp-for="Input.CompanyAffiliation " class="form-control" autocomplete="FullName" aria-required="true" />
                             <label asp-for="Input.CompanyAffiliation "></label>
                             <span asp-validation-for="Input.CompanyAffiliation " class="text-danger"></span>
                         </div>
-                   </div>
+                    </div>
                     <div class="col-md-6">
-                     <div class="form-floating mb-3">
+                        <div class="form-floating mb-3">
                             <input asp-for="Input.NumberOfEmployees " class="form-control" autocomplete="FullName" aria-required="true" />
                             <label asp-for="Input.NumberOfEmployees "></label>
                             <span asp-validation-for="Input.NumberOfEmployees " class="text-danger"></span>
                         </div>
-                   </div>
+                    </div>
                     <div class="col-md-6">
-                     <div class="form-floating mb-3">
+                        <div class="form-floating mb-3">
                             <input asp-for="Input.NatureOfBusiness  " class="form-control" autocomplete="FullName" aria-required="true" />
                             <label asp-for="Input.NatureOfBusiness  "></label>
                             <span asp-validation-for="Input.NatureOfBusiness  " class="text-danger"></span>
                         </div>
-                   </div>                        
-                   <div class="col-md-6">  
+                    </div>
+                    <div class="col-md-6">
                         <!--TO FIX-->
                         <div class="form-floating mb-3">
                             <select asp-for="Input.BusinessType" class="form-control">
@@ -79,52 +80,52 @@
                             <label asp-for="Input.BusinessType"></label>
                             <span asp-validation-for="Input.BusinessType" class="text-danger"></span>
                         </div>
-                   </div>    
-                   <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="Input.SECNumber   " class="form-control" autocomplete="FullName" aria-required="true" />
                             <label asp-for="Input.SECNumber   "></label>
                             <span asp-validation-for="Input.SECNumber   " class="text-danger"></span>
                         </div>
-                   </div>   
-                   <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="Input.BusinessPNumber   " class="form-control" autocomplete="FullName" aria-required="true" />
                             <label asp-for="Input.BusinessPNumber   "></label>
                             <span asp-validation-for="Input.BusinessPNumber   " class="text-danger"></span>
                         </div>
-                   </div> 
-                   <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="Input.BIRTIN   " class="form-control" autocomplete="FullName" aria-required="true" />
                             <label asp-for="Input.BIRTIN   "></label>
                             <span asp-validation-for="Input.BIRTIN   " class="text-danger"></span>
                         </div>
-                   </div>
-                   <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
                             <label asp-for="Input.Email"></label>
                             <span asp-validation-for="Input.Email" class="text-danger"></span>
                         </div>
-                   </div>
-                   <div class="col-md-6">
-                       <div class="form-floating mb-3">
+                    </div>
+                   @* <div class="col-md-6">
+                        <div class="form-floating mb-3">
                             <input asp-for="Input.Password" class="form-control" id="my_pass" autocomplete="new-password" aria-required="true" />
                             <label asp-for="Input.Password"></label>
                             <p><input type="checkbox" onclick="myPassword()">Show Password</p>
                             <span asp-validation-for="Input.Password" class="text-danger"></span>
                         </div>
-                   </div>
-                   <div class="col-md-6">
-                       
+                    </div>
+                    <div class="col-md-6">
+
                         <div class="form-floating mb-3">
                             <input asp-for="Input.ConfirmPassword" class="form-control" id="my_pass2" autocomplete="new-password" aria-required="true" />
                             <label asp-for="Input.ConfirmPassword"></label>
-                              <p><input type="checkbox" onclick="myPassword2()">Show Password</p>
+                            <p><input type="checkbox" onclick="myPassword2()">Show Password</p>
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                         </div>
-                   </div>
+                    </div>*@
                     <div class="col-md-12">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group mt-5">
@@ -139,13 +140,12 @@
                             <span asp-validation-for="Input.Pic" class="text-danger"></span>
                         </div>
                     </div>
-                   </div>
-                   <div class="row">        
-                   
-                   </div>
+                </div>
+                <div class="row">
+                </div>
                 @*</div>*@
-                
-                      <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-success mb-3">Register</button>
+
+                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-success mb-3">Register</button>
 
 
             </form>
@@ -154,23 +154,23 @@
 </div>
 
 <script>
-function myPassword() {
-  var x = document.getElementById("my_pass");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password";
-  }
-}
+    function myPassword() {
+        var x = document.getElementById("my_pass");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
 
-function myPassword2() {
-  var x = document.getElementById("my_pass2");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password"; 
-  }
-}
+    function myPassword2() {
+        var x = document.getElementById("my_pass2");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
 </script>
 
 @section Scripts {
