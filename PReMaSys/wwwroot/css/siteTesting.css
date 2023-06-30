@@ -9,7 +9,6 @@ html {
     margin: 0;
     padding: 0;
     box-sizing: border-box
-    
 }
 
 .page-title-header, .point-title-header, .point-total-header, table, .rewards-tab, .login-form, .register-form, .nav-link-form, .nav-link-employee, .nav-link-employee2, .nav-link-admin, .nav-link-admin2, .reward-option, .option-link, h1, h2, h3, h4, p, h5, button, .card, .partial {
@@ -52,21 +51,23 @@ html {
     .main-pg-card-whole {
         grid-template-columns: repeat(3, 1fr);
     }
+
     .main-pg-card-whole-domain {
         grid-template-columns: repeat(4, 2fr);
     }
+
     .main-pg-card-whole-support {
         grid-template-columns: repeat(2, 1fr);
     }
-
 }
 
-@media (max-width:  1000px) {
+@media (max-width: 1000px) {
     .login-pic-bg, .register-pic-bg {
         display: none;
     }
+
     .main-pg-card-whole, main-pg-card-whole-support, main-pg-card-whole-domain {
-       max-width:500px;
+        max-width: 500px;
     }
 }
 
@@ -75,14 +76,13 @@ html {
 @media (max-width: 767px) {
     .genrep-img {
         width: 290px;
-        margin:auto;
-        display:block;
+        margin: auto;
+        display: block;
     }
 
-    .whole-register-form{
-        margin-top:20px;
+    .whole-register-form {
+        margin-top: 20px;
     }
-    
 }
 
 
@@ -90,7 +90,7 @@ html {
 
 /* CSS FOR NAVBAR - HOME PAGE*/
 
-.nav-link-form, .nav-link-btn { 
+.nav-link-form, .nav-link-btn {
     text-decoration: none;
     display: block;
     text-align: center;
@@ -112,9 +112,9 @@ ul.navbar-list {
 }
 
 .logoname {
-  font-family: 'Barlow', sans-serif;
-  font-weight: 900;
-  /*font-size:50px;*/
+    font-family: 'Barlow', sans-serif;
+    font-weight: 900;
+    /*font-size:50px;*/
 }
 
 .logo-img {
@@ -129,7 +129,7 @@ ul.navbar-list {
     border: 1px solid green;
     border-radius: 5px;
     padding: 15px;
-    margin:  80px 200px 0px 200px*//*80px 600px 0px 600px;*//*;
+    margin:  80px 200px 0px 200px*/ /*80px 600px 0px 600px;*/ /*;
     text-align: center
 }*/
 
@@ -148,9 +148,9 @@ ul.navbar-list {
         width:580px;
     }*/
 
-    .form-login, .form-register {
-        width: 992px;
-    }
+.form-login, .form-register {
+    width: 992px;
+}
 
 .login-pic-bg {
     height: 650px;
@@ -185,7 +185,7 @@ ul.navbar-list {
     font-size: 15px;
     color: white;
     padding: 12px 20px;
-/*    border: 1px solid white;*/
+    /*    border: 1px solid white;*/
     border-radius: 10px;
 }
 
@@ -227,11 +227,11 @@ ul.navbar-list {
     color: black;
 }
 
-.option-text:hover{
-    color:black;
-}
+    .option-text:hover {
+        color: black;
+    }
 
-.between{
+.between {
     margin-right: 30px;
     margin-left: 30px;
 }
@@ -249,7 +249,7 @@ ul.navbar-list {
     max-width: 700px;
 }
 
-.person-img, .transaction-reward-img{
+.person-img, .transaction-reward-img {
     width: 50px;
 }
 
@@ -262,24 +262,24 @@ ul.navbar-list {
     background-color: #62bd82;
 }
 
-#reward-img{
+#reward-img {
     height: 250px;
-    width:290px;
+    width: 290px;
 }
 
-.card-rewards{
+.card-rewards {
     max-width: 295px;
     /*margin-left:27px;*/
 }
 
-#carouselCaptions{
-    max-width:600px;
+#carouselCaptions {
+    max-width: 600px;
 }
 
 /*FOR ADMIN*/
 
 /*css for admin pages*/
-.notificationback-link{
+.notificationback-link {
     width: 100px;
 }
 
@@ -298,9 +298,3 @@ ul.navbar-list {
 .create-role-form, .create-se-form, .create-r-form, .sp-form, .edit-r-form, .edit-se-form, .edit-role-form, .approve-r-form, .deduct-points-forn, .se-record-form, .add-role-form, .resend-email-form, forgot-password-form {
     margin: auto;
 }
-
-
-
-
-
-
