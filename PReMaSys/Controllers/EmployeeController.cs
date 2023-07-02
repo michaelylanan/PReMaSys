@@ -245,10 +245,10 @@ namespace PReMaSys.Controllers
                 purchase.DateAdded = DateTime.Now;
                 purchase.Stat = record.Stat;
 
-                var temp = Convert.ToDecimal(check) - addCart.RewardPrice;
+                var temp = Convert.ToInt32(Convert.ToDecimal(check) - addCart.RewardPrice);
 
                 var SEmployees = _context.SERecord.Where(s => s.SERId == user).SingleOrDefault();
-                SEmployees.EmployeePoints = temp.ToString();
+                SEmployees.EmployeePoints = temp;
 
                 _context.SERecord.Update(SEmployees);
                 _context.Purchase.Add(purchase);
@@ -275,7 +275,7 @@ namespace PReMaSys.Controllers
             var addCart = _context.AddToCart.Where(c => c.ApplicationUser == user).ToList();
 
             var check = _context.SERecord.FirstOrDefault(c => c.SERId == user).EmployeePoints;
-            decimal cpoints = decimal.Parse(check);
+            int cpoints = Convert.ToInt32(check);
             decimal totalPayment = 0;
 
             foreach (var item in addCart)
@@ -300,14 +300,14 @@ namespace PReMaSys.Controllers
 
                     };
 
-                    cpoints -= item.TotalCost;
+                    cpoints -= Convert.ToInt32(item.TotalCost);
 
                     _context.Purchase.Add(purchase);
                     _context.AddToCart.Remove(item);
                 }
 
                 var SEmployees = _context.SERecord.FirstOrDefault(s => s.SERId == user);
-                SEmployees.EmployeePoints = cpoints.ToString();
+                SEmployees.EmployeePoints = cpoints;
 
                 _context.SERecord.Update(SEmployees);
                 _context.SaveChanges();

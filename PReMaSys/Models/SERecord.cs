@@ -40,7 +40,7 @@ namespace PReMaSys.Models
 
         [Range(0, 10000000000, ErrorMessage = "Must be a valid number!")]
         [Display(Name = "Employee Points")]
-        public string? EmployeePoints { get; set; }
+        public int? EmployeePoints { get; set; }
 
         [Display(Name = "Date Added")]
         public DateTime DateAdded { get; set; }

@@ -1,0 +1,70 @@
+﻿@model IEnumerable<PReMaSys.Models.PointsAllocation>
+@inject PReMaSys.Data.ApplicationDbContext _context
+
+@{
+    ViewData["Title"] = "SalesCriteria";
+}
+
+<h1>SalesCriteria</h1>
+
+@foreach (var timelineGroup in Model.GroupBy(p => p.TimeLine))
+{
+    var timeline = timelineGroup.Key;
+    var cardId = $"card-{Guid.NewGuid()}";
+
+    <div class="card">
+        <div class="card-header">
+            <h3>
+                <a href="#@cardId" class="card-link" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="@cardId">
+                    @timeline
+                </a>
+            </h3>
+        </div>
+        <div class="collapse" id="@cardId">
+            <div class="card-body">
+                @foreach (var criteriaGroup in timelineGroup.GroupBy(p => p.PerformanceCriteriaId))
+                {
+                    var criteriaId = criteriaGroup.Key;
+                    var getCriteria = _context.PerformanceCriterias.FirstOrDefault(p => p.PerformanceCriteriaId == criteriaId)?.RewardsCriteria;
+
+                    <h4>@getCriteria</h4>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Equivalent Criteria Points
+                                </th>
+                                <th>
+                                    Criteria Quota
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in criteriaGroup)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PerformancePoints)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CriteriaQuota)
+                                    </td>
+                                    @*<td>
+                                        Add an Edit link here for each item
+                                        <a asp-action="Edit" asp-route-id="@item.PointsAllocationId">Edit</a>
+                                    </td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+}

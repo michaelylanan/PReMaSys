@@ -551,6 +551,88 @@ namespace PReMaSys.Migrations
                     b.ToTable("EmployeeofThes", "prms");
                 });
 
+            modelBuilder.Entity("PReMaSys.Models.PerformanceCriteria", b =>
+                {
+                    b.Property<int>("PerformanceCriteriaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PerformanceCriteriaId"), 1L, 1);
+
+                    b.Property<string>("RewardsCriteria")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PerformanceCriteriaId");
+
+                    b.ToTable("PerformanceCriterias", "prms");
+                });
+
+            modelBuilder.Entity("PReMaSys.Models.PointsAllocation", b =>
+                {
+                    b.Property<int>("PointsAllocationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PointsAllocationId"), 1L, 1);
+
+                    b.Property<int?>("CriteriaQuota")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateAded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PerformanceCriteriaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PerformancePoints")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TimeLine")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PointsAllocationId");
+
+                    b.ToTable("PointsAllocation", "prms");
+                });
+
+            modelBuilder.Entity("PReMaSys.Models.PointsTracker", b =>
+                {
+                    b.Property<int>("PointsTrackerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PointsTrackerId"), 1L, 1);
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PerformanceCriteriaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PerformancePoints")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SalesPerson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TimeLine")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PointsTrackerId");
+
+                    b.ToTable("PointsTracker", "prms");
+                });
+
             modelBuilder.Entity("PReMaSys.Models.Purchase", b =>
                 {
                     b.Property<int>("PurchaseId")
@@ -857,8 +939,8 @@ namespace PReMaSys.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EmployeePoints")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("EmployeePoints")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("IsArchived")
                         .HasColumnType("datetime2");

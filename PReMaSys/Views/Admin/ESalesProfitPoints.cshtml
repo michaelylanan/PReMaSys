@@ -7,9 +7,9 @@
 
 <h1 class="text-center mt-5 mb-5">E-Sales Profit Points</h1>
 
-@*<p class="mt-5 mb-5">
-    <a href="#" class="btn btn-success p-2">Create New +</a>
-</p>*@
+
+<a asp-action="DeterminePoints" class="btn btn-success p-2 mb-3 d-inline-block">Update Sales Employee Points</a>
+
 <div class="table-responsive">
 <table class="table table-hover" id="salespoints">
     <thead>
@@ -18,21 +18,11 @@
                 @Html.DisplayNameFor(model => model.EmployeeNo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EmployeeFirstname)
+                Employee Full Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EmployeeLastname)
+                Employee Accumulated Points
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmployeePoints)
-            </th>
-   @*         <th>
-                @Html.DisplayNameFor(model => model.DateAdded)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateModified)
-            </th>*@
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -51,23 +41,10 @@
                         @Html.DisplayFor(modelItem => item.EmployeeNo)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.EmployeeFirstname)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EmployeeLastname)
+                        @Html.DisplayFor(modelItem => item.EmployeeFirstname) @Html.DisplayFor(modelItem => item.EmployeeLastname)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.EmployeePoints)
-                    </td>
-@*                    <td>
-                        @Html.DisplayFor(modelItem => item.DateAdded)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateModified)
-                    </td>*@
-                    <td>
-                        <a asp-action="AddPoints" asp-route-id="@item.SEmployeeRecordsID" class="btn btn-info"><i class="fa-solid fa-plus"></i></a> 
-                        <a asp-action="DeductPoints" asp-route-id="@item.SEmployeeRecordsID" class="btn btn-danger"><i class="fa-solid fa-minus"></i></a>
                     </td>
                 </tr>
         }

@@ -34,13 +34,21 @@ namespace PReMaSys.Controllers
 
         public IActionResult SupportPage() //Good
         {
+            int notificationCount = _context.Purchase
+                .Count(p => p.DateModified == null);
+
+            // Pass the count to the view
+            ViewData["NotificationCount"] = notificationCount;
             return View();
         }
         public IActionResult NotificationPage() //Good
         {
             ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
 
-            var list = _context.Purchase.ToList();
+            var list = _context.Purchase
+             .Where(p => p.DateModified == null)
+             .ToList();
+
             return View(list);
         }
 

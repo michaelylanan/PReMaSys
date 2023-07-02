@@ -35,6 +35,13 @@ namespace PReMaSys.Data
 
         public DbSet<EmployeeofThe> EmployeeofThes { get; set; }
 
+        public DbSet<PerformanceCriteria> PerformanceCriterias { get; set; }
+        public DbSet<PointsAllocation> PointsAllocation { get; set; }
+
+        public DbSet<PointsTracker> PointsTracker { get; set; }
+
+
+
 
 
 

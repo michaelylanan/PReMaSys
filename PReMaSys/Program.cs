@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using PReMaSys.Services;
 using PReMaSys.Areas.Identity.Services;
 using PReMaSys.Controllers;
-
-
+using PReMaSys.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +26,9 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 /*builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();*/
 builder.Services.AddRazorPages();
+
+//nEw
+builder.Services.AddScoped<DeterminePoints>();
 
 
 //Enable IEmail Sender

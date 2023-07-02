@@ -14,11 +14,15 @@ namespace PReMaSys.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly DeterminePoints _determinePoints;
 
 
-        public AdminController(ApplicationDbContext context)
+        public AdminController(ApplicationDbContext context, DeterminePoints determinePoints)
         {
             _context = context;
+            _determinePoints = determinePoints;
+
+
         }
 
         public IActionResult ReportsPage()
@@ -103,7 +107,7 @@ namespace PReMaSys.Controllers
 
             temp = Convert.ToDecimal(SEmployees.EmployeePoints) + Convert.ToDecimal(record.EmployeePoints);
 
-            SEmployees.EmployeePoints = temp.ToString();
+            SEmployees.EmployeePoints = Convert.ToInt32(temp);
             SEmployees.DateModified = DateTime.Now;
 
             _context.SERecord.Update(SEmployees);
@@ -139,7 +143,7 @@ namespace PReMaSys.Controllers
 
             temp = Convert.ToDecimal(SEmployees.EmployeePoints) - Convert.ToDecimal(record.EmployeePoints);
 
-            SEmployees.EmployeePoints = temp.ToString();
+            SEmployees.EmployeePoints = Convert.ToInt32(temp);
             SEmployees.DateModified = DateTime.Now;
 
             _context.SERecord.Update(SEmployees);
@@ -343,6 +347,29 @@ namespace PReMaSys.Controllers
             // Save changes to the database
             _context.SaveChanges();
         }
+        public IActionResult SalesCriteria()
+        {
+            var list = _context.PointsAllocation.ToList();
+            return View(list);
+        }
 
+        public IActionResult DeterminePoints()
+        {
+            var cMonth = DateTime.Today.Month;
+            var cYear = DateTime.Today.Year;
+
+            var salesPerformances = _context.SalesPerformances
+               .Where(s => s.DateAdded.Month == cMonth && s.DateAdded.Year == cYear)
+               .ToList();
+
+            foreach (var salesPerformance in salesPerformances)
+            {
+                _determinePoints.CalculatePointsAndUpdateQuota(salesPerformance);
+            }
+
+            return RedirectToAction("ESalesProfitPoints", "Admin");
+        }
     }
+
+
 }
