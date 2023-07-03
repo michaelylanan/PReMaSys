@@ -71,7 +71,11 @@ html {
     }
 }
 
-
+@media (max-width: 990px) {
+    .criteria-logo{
+        min-width: 300px;
+    }
+}
 
 @media (max-width: 767px) {
     .genrep-img {
@@ -298,3 +302,23 @@ ul.navbar-list {
 .create-role-form, .create-se-form, .create-r-form, .sp-form, .edit-r-form, .edit-se-form, .edit-role-form, .approve-r-form, .deduct-points-forn, .se-record-form, .add-role-form, .resend-email-form, forgot-password-form {
     margin: auto;
 }
+
+
+.criteria-header {
+    font-family: 'Pacifico', cursive;
+    font-size: 70px;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  /*  color: #e8ac04;*/
+}
+
+/*.criteria-logo {
+    opacity: 0.8;
+    
+}
+
+, container1 {
+    position: relative;
+}*/
