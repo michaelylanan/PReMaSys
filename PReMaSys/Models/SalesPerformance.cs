@@ -46,6 +46,8 @@ namespace PReMaSys.Models
         [Display(Name = "User Image")]
         public byte[]? UserImage { get; set; }
 
+        public string LoggedUser { get; set; }
+
         public SalesForecast SalesForecast { get; set; }
     }
 

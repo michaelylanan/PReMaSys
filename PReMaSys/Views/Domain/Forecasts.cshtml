@@ -122,7 +122,6 @@
 
 @{
     var salesData = getProfit; // Replace with your method to retrieve data from the SalesPerformance table
-    int currentYear = DateTime.Now.Year;
     var weeklyData = salesData
         .Where(s => s.DateAdded >= DateTime.Today.AddDays(-6) && s.DateAdded <= DateTime.Today)
         .GroupBy(s => s.DateAdded.Date)
@@ -131,40 +130,60 @@
         .ToList();
 
     // Calculate forecasted value
-    var lastWeekProfit = weeklyData.Skip(Math.Max(0, weeklyData.Count - 1)).Select(s => s.Profit).ToList();
-    var forecastedProfit = lastWeekProfit.Count == 1 ? lastWeekProfit[0] : 0;
+    var lastTwoWeeksProfit = weeklyData.Skip(Math.Max(0, weeklyData.Count - 2)).Select(s => s.Profit).ToList();
+    var forecastedProfit = lastTwoWeeksProfit.Count == 2 ? (lastTwoWeeksProfit[0] + lastTwoWeeksProfit[1]) / 2 : 0;
 
     weeklyData.Add(new { Date = DateTime.Today.AddDays(1), Profit = forecastedProfit });
 
 
-    var monthlyData = _context.SalesPerformances
-         .Where(s => s.DateAdded.Year == currentYear)
-         .GroupBy(s => new { Year = s.DateAdded.Year, Month = s.DateAdded.Month })
-         .Select(g => new { Year = g.Key.Year, Month = g.Key.Month, TotalProfit = g.Sum(s => s.SalesProfit) })
-         .OrderBy(d => d.Year)
-         .ThenBy(d => d.Month)
-         .ToList();
+
+    //Monthly Forecast
+    var currentYear = DateTime.Today.Year;
+    var currentMonth = DateTime.Today.Month;
+
+    var monthlyData = salesData
+        .Where(s => s.DateAdded.Year == currentYear && s.DateAdded.Month <= currentMonth)
+        .GroupBy(s => new { Year = s.DateAdded.Year, Month = s.DateAdded.Month })
+        .Select(g => new { Year = g.Key.Year, Month = g.Key.Month, Profit = g.Sum(s => s.SalesProfit) })
+        .OrderBy(d => d.Year)
+        .ThenBy(d => d.Month)
+        .ToList();
 
     // Calculate forecasted value
-    var lastTwoMonthsProfit = monthlyData.Skip(Math.Max(0, monthlyData.Count - 2)).Select(d => d.TotalProfit).ToList();
+    var lastTwoMonthsProfit = monthlyData.Skip(Math.Max(0, monthlyData.Count - 2)).Select(s => s.Profit).ToList();
     var forecastedProfit2 = lastTwoMonthsProfit.Count == 2 ? (lastTwoMonthsProfit[0] + lastTwoMonthsProfit[1]) / 2 : 0;
 
-    monthlyData.Add(new { Year = currentYear, Month = DateTime.Now.Month, TotalProfit = forecastedProfit2 });
+    monthlyData.Add(new { Year = currentYear, Month = currentMonth + 1, Profit = forecastedProfit2 });
 
 
-    var last4Quarters = Enumerable.Range(0, 4)
-       .Select(offset => DateTime.Today.AddMonths(-offset * 3))
-       .Select(date => new { Year = date.Year, Quarter = (date.Month - 1) / 3 + 1 })
-       .ToList();
 
-    var quarterlyData = last4Quarters
-        .GroupJoin(salesData,
-            q => new { q.Year, q.Quarter },
-            sd => new { Year = sd.DateAdded.Year, Quarter = (sd.DateAdded.Month - 1) / 3 + 1 },
-            (q, sd) => new { q.Year, q.Quarter, Profit = sd.Sum(s => s.SalesProfit) })
-        .OrderBy(s => s.Year)
-        //.ThenBy(s => s.Quarter)
+
+    // Quarterly Forecast
+    var currentQuarter = (DateTime.Today.Month - 1) / 3 + 1;
+
+    var quarterlyData = salesData
+        .Where(s => s.DateAdded.Year == currentYear && ((s.DateAdded.Month - 1) / 3 + 1) <= currentQuarter)
+        .GroupBy(s => new { Year = s.DateAdded.Year, Quarter = (s.DateAdded.Month - 1) / 3 + 1 })
+        .Select(g => new { Year = g.Key.Year, Quarter = g.Key.Quarter, Profit = g.Sum(s => s.SalesProfit) })
+        .OrderBy(d => d.Year)
+        .ThenBy(d => d.Quarter)
         .ToList();
+
+    // Calculate forecasted value
+    var lastTwoQuartersProfit = quarterlyData.Skip(Math.Max(0, quarterlyData.Count - 2)).Select(q => q.Profit).ToList();
+    var forecastedProfit3 = lastTwoQuartersProfit.Count == 2 ? (lastTwoQuartersProfit[0] + lastTwoQuartersProfit[1]) / 2 : 0;
+
+    quarterlyData.Add(new { Year = currentYear, Quarter = currentQuarter + 1, Profit = forecastedProfit3 });
+
+    var quarterlyDates = quarterlyData
+        .Select(s => new { Label = s.Quarter == currentQuarter + 1 ? "Forecast Q" : "Q" + s.Quarter.ToString(), SortOrder = s.Quarter })
+        .OrderBy(s => s.SortOrder)
+        .Select(s => s.Label);
+
+    var quarterlyProfit = quarterlyData
+        .OrderBy(s => s.Quarter)
+        .Select(s => s.Profit ?? 0);
+
 
     var yearlyData = salesData.Where(s => s.DateAdded >= DateTime.Today.AddYears(-1) && s.DateAdded <= DateTime.Today).ToList();
     var yearlyGroupedData = yearlyData.GroupBy(s => s.DateAdded.Year)
@@ -180,23 +199,27 @@
     // Add forecasted data to yearlyGroupedData
     yearlyGroupedData.Add(new { Year = DateTime.Today.Year + 1, Profit = forecastedProfit4 });
 
+    var forecastYear = DateTime.Today.Year + 1;
+
+
 }
 
 <script type="text/javascript">
     function plotcharts() {
-        var weeklyDates = @Html.Raw(Json.Serialize(weeklyData.Select(s => s.Date == DateTime.Today ? "Forecast" : s.Date.ToString("yyyy-MM-dd"))));
+        var weeklyDates = @Html.Raw(Json.Serialize(weeklyData.Select(s => s.Date == DateTime.Today.AddDays(1) ? "Forecast " + s.Date.ToString("dddd") : s.Date.ToString("dddd"))));
         var weeklyProfit = @Html.Raw(Json.Serialize(weeklyData.Select(s => s.Profit)));
 
 
-        var monthlyDates = @Html.Raw(Json.Serialize(monthlyData.Select(d => d.Year == currentYear && d.Month == DateTime.Now.Month ? "Next Month" : new DateTime(d.Year, d.Month, 1).ToString("MMMM"))));
-        var monthlyProfit = @Html.Raw(Json.Serialize(monthlyData.Select(d => d.TotalProfit)));
+
+        var monthlyDates = @Html.Raw(Json.Serialize(monthlyData.Select(s => s.Month == DateTime.Today.Month + 1 ? "Forecast " + new DateTime(s.Year, s.Month, 1).ToString("MMMM") : new DateTime(s.Year, s.Month, 1).ToString("MMMM"))));
+        var monthlyProfit = @Html.Raw(Json.Serialize(monthlyData.Select(s => s.Profit)));
+
+        var quarterlyDates = @Html.Raw(Json.Serialize(quarterlyDates));
+        var quarterlyProfit = @Html.Raw(Json.Serialize(quarterlyProfit));
 
 
-        var quarterlyDates = @Html.Raw(Json.Serialize(quarterlyData.Select(s => $"Q{s.Quarter} {s.Year}")));
-        var quarterlyProfit = @Html.Raw(Json.Serialize(quarterlyData.Select(s => s.Profit ?? 0)));
 
-
-        var yearlyDates = @Html.Raw(Json.Serialize(yearlyGroupedData.Select(g => g.Year)));
+        var yearlyDates = @Html.Raw(Json.Serialize(yearlyGroupedData.Select(g => g.Year == forecastYear ? "Forecast " + forecastYear : g.Year.ToString())));
         var yearlyProfit = @Html.Raw(Json.Serialize(yearlyGroupedData.Select(g => g.Profit)));
 
 

@@ -15,6 +15,11 @@ namespace PReMaSys.Controllers
             return View();
         }
 
+        public IActionResult FirstLanding()
+        {
+            return View();
+        }
+
         public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
         {
             _context = context;

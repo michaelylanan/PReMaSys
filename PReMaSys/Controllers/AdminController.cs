@@ -7,6 +7,8 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 using PReMaSys.ViewModel;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace PReMaSys.Controllers
 {
@@ -15,12 +17,14 @@ namespace PReMaSys.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly DeterminePoints _determinePoints;
+        private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public AdminController(ApplicationDbContext context, DeterminePoints determinePoints)
+        public AdminController(ApplicationDbContext context, DeterminePoints determinePoints, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _determinePoints = determinePoints;
+            _userManager = userManager;
 
 
         }
@@ -75,7 +79,9 @@ namespace PReMaSys.Controllers
 
         public IActionResult SPerformanceList()
         {
-            var list = _context.SalesPerformances.ToList();
+            ApplicationUser u = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+            string au = u?.Id.ToString();
+            var list = _context.SalesPerformances.Where(a => a.LoggedUser == au).ToList();
             return View(list);
         }
 
@@ -164,8 +170,12 @@ namespace PReMaSys.Controllers
         [AutoValidateAntiforgeryToken]
         public IActionResult SalesPerformance(SalesPerformance record)
         {
+            ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+            string au = user?.Id.ToString();
+
             var sales = new SalesPerformance()
             {
+                LoggedUser = au,
                 SalesPerson = record.SalesPerson,
                 UnitsSold = record.UnitsSold,
                 CostPricePerUnit = record.CostPricePerUnit,

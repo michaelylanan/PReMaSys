@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4 mt-5 fw-bold animate__animated animate__bounceIn">Welcome to <span class="text-success">PReMaSys</span></h1>
+</div>
+<div class="row mt-3 text-center">
+    <div class="col-lg-6 col-sm-12">
+        <img src="~/img/logo.png" class="logo-img mx-auto animate__animated animate__fadeInLeft img-fluid" alt="PremasysLogo" />
+    </div>
+    <div class="col-lg-6 col-sm-12 mt-5">
+        <p class="fs-4">Hello! This landing page is for users who haven't assigned a role yet. Please wait for your administrator to take action. Thank you!</p>
+        <img src="~/img/homepicbgr.png" class="mx-auto h-50 animate__animated animate__fadeInRight img-fluid" alt="" />
+        <p>Is this your first time logging in? <br />Let's update your temporary password to a new one. <br />Please click the button below.</p>
+        <a class="btn btn-success rounded-pill w-50 p-2" asp-area="Identity" asp-page="/Account/Manage/ChangePassword" role="button">Change Password</a>
+
+    </div>
+</div>

@@ -44,7 +44,7 @@
                         @Html.DisplayFor(modelItem => item.EmployeeFirstname) @Html.DisplayFor(modelItem => item.EmployeeLastname)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.EmployeePoints)
+                            @string.Format("{0:#,##0}", item.EmployeePoints)
                     </td>
                 </tr>
         }

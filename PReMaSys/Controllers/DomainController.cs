@@ -43,7 +43,40 @@ namespace PReMaSys.Controllers
 
         public IActionResult Ranking() 
         {
-            return View();
+            // Retrieve all sales performances
+            var allPerformances = _context.SalesPerformances.ToList();
+
+            // Combine the data for sales performances with the same salesperson
+            var combinedPerformances = allPerformances
+                .GroupBy(s => s.SalesPerson)
+                .Select(g => new SalesPerformance
+                {
+                    SalesPerson = g.Key,
+                    UnitsSold = g.Sum(s => s.UnitsSold),
+                    SalesRevenue = g.Sum(s => s.SalesRevenue),
+                    SalesProfit = g.Sum(s => s.SalesProfit)
+                })
+                .ToList();
+
+            // Retrieve the top three sales performances based on a criterion (e.g., UnitsSold, SalesRevenue, SalesProfit)
+            var topThreePerformances = combinedPerformances
+                .OrderByDescending(s => s.UnitsSold)
+                .Take(3)
+                .ToList();
+
+            // Exclude the top three performances from the remaining performances
+            var remainingPerformances = combinedPerformances
+                .Except(topThreePerformances)
+                .ToList();
+
+            // Pass the data to the view
+            var model = new SalesPerformanceRankingViewModel
+            {
+                TopThreePerformances = topThreePerformances,
+                RemainingPerformances = remainingPerformances
+            };
+
+            return View(model);
         }
 
         public IActionResult Forecasts() 

@@ -195,9 +195,7 @@ namespace PReMaSys.Controllers
                     ModelState.AddModelError("", error.Description);
                 }
                 
-                _context.SERecord.Remove(emp);
-                _context.SaveChanges();
-
+                
                 return View("ListAdminRoles");              
             }
         }
@@ -265,10 +263,12 @@ namespace PReMaSys.Controllers
 
             var latest = user.Id;
             var getId = _context.ApplicationUsers.FirstOrDefault(u => u.Id == latest);
+            string AS = getId?.Id.ToString();
             var userzz = new SERecord   
             {
                /* SERId = latest,*/
                 SERId = getId,
+                AppSerId = AS,
                 EmployeeNo = se.EmployeeNo,
                 EmployeeFirstname = se.EmployeeFirstname,
                 EmployeeLastname = se.EmployeeLastname,
@@ -433,6 +433,7 @@ namespace PReMaSys.Controllers
                 
                 var latest = user.Id;
                 var getId = _context.ApplicationUsers.FirstOrDefault(u => u.Id == latest);
+                string AS = getId?.Id.ToString();
 
                 if (result.Succeeded)
                 {
@@ -457,6 +458,7 @@ namespace PReMaSys.Controllers
                     SERecord seRecord = new SERecord
                     {
                         SERId = getId,
+                        AppSerId = AS,
                         EmployeeNo = row["EmployeeNo"].ToString(),
                         EmployeeFirstname = row["EmployeeFirstname"].ToString(),
                         EmployeeLastname = row["EmployeeLastname"].ToString(),

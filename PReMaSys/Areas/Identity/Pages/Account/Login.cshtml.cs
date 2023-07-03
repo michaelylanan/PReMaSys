@@ -117,6 +117,10 @@ namespace PReMaSys.Areas.Identity.Pages.Account
                     {
                         return Redirect("~/Manage/ListAllRoles");
                     }
+                    else
+                    {
+                        return Redirect("~/Home/FirstLanding");
+                    }
                     /* else if (roles.Contains("Admin"))
                      {
                          return Redirect("~/Admin/AdminDashboard");

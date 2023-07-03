@@ -17,6 +17,8 @@ namespace PReMaSys.Models
 
         public ApplicationUser?  SERId { get; set; }
 
+        public string? AppSerId { get; set; }
+
         [Required(ErrorMessage = "Required")]
         [Display(Name = "Employee No.")]
         public string? EmployeeNo { get; set; }

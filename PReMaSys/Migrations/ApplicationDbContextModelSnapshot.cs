@@ -870,6 +870,10 @@ namespace PReMaSys.Migrations
                     b.Property<DateTime?>("DateModified")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("LoggedUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Particulars")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -912,6 +916,9 @@ namespace PReMaSys.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SEmployeeRecordsID"), 1L, 1);
+
+                    b.Property<string>("AppSerId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
