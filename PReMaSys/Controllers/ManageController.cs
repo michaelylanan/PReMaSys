@@ -155,7 +155,6 @@ namespace PReMaSys.Controllers
             
                 var role = await _roleManager.FindByIdAsync(roleId);
 
-                //ApplicationUser currentUser = await _userManager.GetUserAsync(HttpContext.User);
                 var cUser = await _userManager.GetUserAsync(User);
 
                 var model = new List<UserRoleViewModel>();
@@ -215,15 +214,19 @@ namespace PReMaSys.Controllers
                 if (model[i].IsSelected && !(await _userManager.IsInRoleAsync(user, role.Name)))
                 {
                     result = await _userManager.AddToRoleAsync(user, role.Name);
+                    user.IsChecked = true;
                 }
                 else if (!model[i].IsSelected && (await _userManager.IsInRoleAsync(user, role.Name)))
                 {
                     result = await _userManager.RemoveFromRoleAsync(user, role.Name);
+                    user.IsChecked = false;
                 }
                 else
                 {
                     continue;
                 }
+
+                await _userManager.UpdateAsync(user);
 
                 if (result.Succeeded)
                 {

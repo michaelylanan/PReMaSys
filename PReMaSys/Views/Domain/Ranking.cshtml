@@ -22,13 +22,13 @@
 
 <div class="container" style="margin-top:30px; display:flex; justify-content:center" id="row">
     <div class="row">
-        @if (!Model.TopThreePerformances.Any())
+        @if (!Model.TopThreeP.Any())
         {
             <div>No data yet!</div>
         }
         else
         {
-            @foreach (var (index, performance) in Model.TopThreePerformances.Select((value, i) => (i + 1, value)))
+            @foreach (var (index, performance) in Model.TopThreeP.Select((value, i) => (i + 1, value)))
             {
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="card ranking-card text-bg-light mb-3 mx-auto">
@@ -149,13 +149,13 @@
             </tr>
         </thead>
         <tbody>
-            @if (!Model.RemainingPerformances.Any())
+            @if (!Model.RemainingP.Any())
             {
                 <div>No Data Yet</div>
             }
             else
             {
-                @foreach (var (index, performance) in Model.RemainingPerformances.Select((value, i) => (i + 4, value)))
+                @foreach (var (index, performance) in Model.RemainingP.Select((value, i) => (i + 4, value)))
                 {
                     var salesName = _context.SERecord.FirstOrDefault(s => s.EmployeeNo == performance.SalesPerson)?.EmployeeFirstname;
                     var salesLName = _context.SERecord.FirstOrDefault(s => s.EmployeeNo == performance.SalesPerson)?.EmployeeLastname;

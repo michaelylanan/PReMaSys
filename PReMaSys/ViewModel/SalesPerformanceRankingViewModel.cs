@@ -2,6 +2,6 @@
 
 public class SalesPerformanceRankingViewModel
 {
-    public List<SalesPerformance> TopThreePerformances { get; set; }
-    public List<SalesPerformance> RemainingPerformances { get; set; }
+    public List<SalesPerformance> TopThreeP { get; set; }
+    public List<SalesPerformance> RemainingP { get; set; }
 }

@@ -184,7 +184,7 @@ namespace PReMaSys.Controllers
                 Particulars = record.Particulars,
                 SalesRevenue = (record.UnitsSold * record.SellingPricePerUnit),
                 SalesProfit = (record.UnitsSold * record.SellingPricePerUnit) - (record.UnitsSold * record.CostPricePerUnit),
-                SalesVolume = record.SalesVolume,
+                SalesVolume = Convert.ToInt32(record.UnitsSold),
                 ConversionR = record.ConversionR,
                 AverageDealSize = record.AverageDealSize,
                 CustomerAcquisition = record.CustomerAcquisition,
@@ -199,7 +199,6 @@ namespace PReMaSys.Controllers
         }
         public IActionResult Update(int? id)
         {
-            // Retrieve the SalesPerformance object to edit from the database or any other source
             SalesPerformance salesPerformance = _context.SalesPerformances.Find(id);
 
             if (salesPerformance == null)
@@ -250,37 +249,23 @@ namespace PReMaSys.Controllers
 
         public IActionResult SalesPerformanceRanking()
         {
-            // Retrieve all sales performances
-            var allPerformances = _context.SalesPerformances.ToList();
+            var salesP = _context.SalesPerformances.ToList();
 
-            // Combine the data for sales performances with the same salesperson
-            var combinedPerformances = allPerformances
-                .GroupBy(s => s.SalesPerson)
-                .Select(g => new SalesPerformance
+            var combP = salesP.GroupBy(s => s.SalesPerson).Select(g => new SalesPerformance
                 {
                     SalesPerson = g.Key,
                     UnitsSold = g.Sum(s => s.UnitsSold),
                     SalesRevenue = g.Sum(s => s.SalesRevenue),
                     SalesProfit = g.Sum(s => s.SalesProfit)
-                })
-                .ToList();
+                }).ToList();
 
-            // Retrieve the top three sales performances based on a criterion (e.g., UnitsSold, SalesRevenue, SalesProfit)
-            var topThreePerformances = combinedPerformances
-                .OrderByDescending(s => s.UnitsSold)
-                .Take(3)
-                .ToList();
+            var topThree = combP.OrderByDescending(s => s.UnitsSold).Take(3).ToList();
+            var remaining = combP.Except(topThree).ToList();
 
-            // Exclude the top three performances from the remaining performances
-            var remainingPerformances = combinedPerformances
-                .Except(topThreePerformances)
-                .ToList();
-
-            // Pass the data to the view
             var model = new SalesPerformanceRankingViewModel
             {
-                TopThreePerformances = topThreePerformances,
-                RemainingPerformances = remainingPerformances
+                TopThreeP = topThree,
+                RemainingP = remaining
             };
 
             return View(model);
@@ -296,51 +281,34 @@ namespace PReMaSys.Controllers
 
         public void UpdateSalesPersonOfTheMonthAndYear()
         {
-            // Get the current month
-            var currentMonth = DateTime.Now.Month;
+            var CMonth = DateTime.Now.Month;
 
-            // Get all distinct SalesPerson values from SalesPerformances table
-            var salesPersons = _context.SalesPerformances
-                .Where(sp => sp.DateAdded.Month == currentMonth)
-                .Select(sp => sp.SalesPerson)
-                .Distinct()
-                .ToList();
+            var sPersons = _context.SalesPerformances.Where(sp => sp.DateAdded.Month == CMonth).Select(sp => sp.SalesPerson).Distinct().ToList();
 
-            foreach (var salesPerson in salesPersons)
+            foreach (var salesPerson in sPersons)
             {
-                // Check if the EmployeeofThe record exists for the sales person
-                var employeeOfTheMonth = _context.EmployeeofThes.FirstOrDefault(e => e.SalesPerson == salesPerson);
-
-
-                if (employeeOfTheMonth != null)
+                var eotm = _context.EmployeeofThes.FirstOrDefault(e => e.SalesPerson == salesPerson);
+                if (eotm != null)
                 {
-                    // Check if the DateModified is not in the current month
-                    if (employeeOfTheMonth.DateModified?.Month != currentMonth)
+                    if (eotm.DateModified?.Month != CMonth)
                     {
-                        // Check if the sales person has the highest sales profit in the current month
-                        var highestSalesPerson = _context.SalesPerformances
-                            .Where(sp => sp.DateAdded.Month == currentMonth && sp.SalesPerson == salesPerson)
-                            .OrderByDescending(sp => sp.SalesProfit)
-                            .FirstOrDefault();
+                        var highestSalesPerson = _context.SalesPerformances.Where(sp => sp.DateAdded.Month == CMonth && sp.SalesPerson == salesPerson).OrderByDescending(sp => sp.SalesProfit).FirstOrDefault();
 
                         if (highestSalesPerson != null)
                         {
-                            // Update the existing EmployeeofThe record
-                            employeeOfTheMonth.EmployeeOfTheMonth += 1;
-                            employeeOfTheMonth.DateModified = DateTime.Now;
+                            eotm.EmployeeOfTheMonth += 1;
+                            eotm.DateModified = DateTime.Now;
 
-                            // Check if the sales person has accumulated points for SalesPerson of the Month
-                            if (employeeOfTheMonth.EmployeeOfTheMonth % 7 == 0)
+                            if (eotm.EmployeeOfTheMonth % 7 == 0)
                             {
                                 // Update the EmployeeofTheYear
-                                employeeOfTheMonth.EmployeeOfTheYear += 1;
+                                eotm.EmployeeOfTheYear += 1;
                             }
                         }
                     }
                 }
                 else
                 {
-                    // Create a new EmployeeofThe record
                     var newEmployeeOfTheMonth = new EmployeeofThe
                     {
                         SalesPerson = salesPerson,
@@ -349,14 +317,12 @@ namespace PReMaSys.Controllers
                         DateModified = DateTime.Now
                     };
 
-                    // Add the new record to the context
                     _context.EmployeeofThes.Add(newEmployeeOfTheMonth);
                 }
             }
-
-            // Save changes to the database
             _context.SaveChanges();
         }
+
         public IActionResult SalesCriteria()
         {
             var list = _context.PointsAllocation.ToList();
@@ -368,13 +334,11 @@ namespace PReMaSys.Controllers
             var cMonth = DateTime.Today.Month;
             var cYear = DateTime.Today.Year;
 
-            var salesPerformances = _context.SalesPerformances
-               .Where(s => s.DateAdded.Month == cMonth && s.DateAdded.Year == cYear)
-               .ToList();
+            var salesPerformances = _context.SalesPerformances.Where(s => s.DateAdded.Month == cMonth && s.DateAdded.Year == cYear).ToList();
 
             foreach (var salesPerformance in salesPerformances)
             {
-                _determinePoints.CalculatePointsAndUpdateQuota(salesPerformance);
+                _determinePoints.CPointsAndUQuota(salesPerformance);
             }
 
             return RedirectToAction("ESalesProfitPoints", "Admin");

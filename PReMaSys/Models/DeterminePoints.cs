@@ -12,29 +12,19 @@ namespace PReMaSys.Models
             _context = context;
         }
 
-        public void CalculatePointsAndUpdateQuota(SalesPerformance salesPerformance)
+        public void CPointsAndUQuota(SalesPerformance salesPerformance)
         {
             var criteriaList = _context.PerformanceCriterias.ToList();
             var cMonth = DateTime.Today.Month;
             var cYear = DateTime.Today.Year;
             var cQuarter = (cMonth - 1) / 3 + 1;
 
-            // Calculate and assign points for the current week
-            CalculateAndAssignWeeklyPoints(salesPerformance, criteriaList);
-
-            // Calculate and assign points for the current month
-            CalculateAndAssignMonthlyPoints(salesPerformance, criteriaList, cMonth, cYear);
-
-            // Calculate and assign points for the current quarter
-            CalculateAndAssignQuarterlyPoints(salesPerformance, criteriaList, cQuarter, cYear);
-
-            // Calculate and assign points for the current year
-            CalculateAndAssignYearlyPoints(salesPerformance, criteriaList, cYear);
+            AssignWeeklyPoints(salesPerformance, criteriaList);
+            AssignMonthlyPoints(salesPerformance, criteriaList, cMonth, cYear);
+            AssignQuarterlyPoints(salesPerformance, criteriaList, cQuarter, cYear);
+            AssignYearlyPoints(salesPerformance, criteriaList, cYear);
 
             _context.SaveChanges();
-
-
-
 
             foreach (var criteria in criteriaList)
             {
@@ -46,7 +36,7 @@ namespace PReMaSys.Models
 
                 if (pointsAllocation == null)
                 {
-                    int calculatedPoints = CalculatePoints(salesPerformance, criteria);
+                    int cPoints = CPoints(salesPerformance, criteria);
 
                     // Update the PointsTracker record for the corresponding criteria, salesperson, and time period
                     pointsAllocation = new PointsTracker
@@ -54,7 +44,7 @@ namespace PReMaSys.Models
                         PerformanceCriteriaId = criteria.PerformanceCriteriaId,
                         SalesPerson = salesPerformance.SalesPerson,
                         TimeLine = salesPerformance.DateAdded.ToString("yyyy-MM"),
-                        PerformancePoints = calculatedPoints,
+                        PerformancePoints = cPoints,
                         DateAdded = DateTime.Today
                     };
 
@@ -65,14 +55,14 @@ namespace PReMaSys.Models
                     var serRecord = _context.SERecord.FirstOrDefault(s => s.EmployeeNo == salesPerformance.SalesPerson);
                     if (serRecord != null)
                     {
-                        serRecord.EmployeePoints += calculatedPoints;
+                        serRecord.EmployeePoints += cPoints;
                         _context.SaveChanges();
                     }
                 }
             }
         }
 
-        private void CalculateAndAssignQuarterlyPoints(SalesPerformance salesPerformance, List<PerformanceCriteria> criteriaList, int currentQuarter, int currentYear)
+        private void AssignQuarterlyPoints(SalesPerformance salesPerformance, List<PerformanceCriteria> criteriaList, int currentQuarter, int currentYear)
         {
             var firstDayOfQuarter = new DateTime(currentYear, (currentQuarter - 1) * 3 + 1, 1);
             var lastDayOfQuarter = firstDayOfQuarter.AddMonths(3).AddDays(-1);
@@ -92,7 +82,7 @@ namespace PReMaSys.Models
                     SalesPerson = g.Key,
                     SalesRevenue = g.Sum(s => s.SalesRevenue),
                     GrossProfit = g.Sum(s => s.SellingPricePerUnit - s.CostPricePerUnit),
-                    SalesVolume = g.Sum(s => s.SalesVolume),
+                    SalesVolume = g.Sum(s => s.UnitsSold),
                     ConversionRate = g.Average(s => s.ConversionR),
                     AverageDealSize = g.Average(s => s.AverageDealSize),
                     CustomerRetention = g.OrderByDescending(s => s.DateAdded)
@@ -161,7 +151,7 @@ namespace PReMaSys.Models
             }
         }
 
-        private void CalculateAndAssignYearlyPoints(SalesPerformance salesPerformance, List<PerformanceCriteria> criteriaList, int currentYear)
+        private void AssignYearlyPoints(SalesPerformance salesPerformance, List<PerformanceCriteria> criteriaList, int currentYear)
         {
             var firstDayOfYear = new DateTime(currentYear, 1, 1);
             var lastDayOfYear = new DateTime(currentYear, 12, 31);
@@ -181,7 +171,7 @@ namespace PReMaSys.Models
                     SalesPerson = g.Key,
                     SalesRevenue = g.Sum(s => s.SalesRevenue),
                     GrossProfit = g.Sum(s => s.SellingPricePerUnit - s.CostPricePerUnit),
-                    SalesVolume = g.Sum(s => s.SalesVolume),
+                    SalesVolume = g.Sum(s => s.UnitsSold),
                     ConversionRate = g.Average(s => s.ConversionR),
                     AverageDealSize = g.Average(s => s.AverageDealSize),
                     CustomerRetention = g.OrderByDescending(s => s.DateAdded)
@@ -250,7 +240,7 @@ namespace PReMaSys.Models
             }
         }
 
-        private void CalculateAndAssignMonthlyPoints(SalesPerformance salesPerformance, List<PerformanceCriteria> criteriaList, int cYear, int cYear1)
+        private void AssignMonthlyPoints(SalesPerformance salesPerformance, List<PerformanceCriteria> criteriaList, int cYear, int cYear1)
         {
             var cMonth = DateTime.Today.Month;
             var currentYear = DateTime.Today.Year;
@@ -271,7 +261,7 @@ namespace PReMaSys.Models
                     SalesPerson = g.Key,
                     SalesRevenue = g.Sum(s => s.SalesRevenue),
                     GrossProfit = g.Sum(s => s.SellingPricePerUnit - s.CostPricePerUnit),
-                    SalesVolume = g.Sum(s => s.SalesVolume),
+                    SalesVolume = g.Sum(s => s.UnitsSold),
                     ConversionRate = g.Average(s => s.ConversionR),
                     AverageDealSize = g.Average(s => s.AverageDealSize),
                     CustomerRetention = g.OrderByDescending(s => s.DateAdded)
@@ -341,7 +331,7 @@ namespace PReMaSys.Models
             }
         }
 
-        private void CalculateAndAssignWeeklyPoints(SalesPerformance salesPerformance, List<PerformanceCriteria> criteriaList)
+        private void AssignWeeklyPoints(SalesPerformance salesPerformance, List<PerformanceCriteria> criteriaList)
         {
             var cWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
 
@@ -360,7 +350,7 @@ namespace PReMaSys.Models
                 SalesPerson = g.Key,
                 SalesRevenue = g.Sum(s => s.SalesRevenue),
                 GrossProfit = g.Sum(s => s.SellingPricePerUnit - s.CostPricePerUnit),
-                SalesVolume = g.Sum(s => s.SalesVolume),
+                SalesVolume = g.Sum(s => s.UnitsSold),
                 ConversionRate = g.Average(s => s.ConversionR),
                 AverageDealSize = g.Average(s => s.AverageDealSize),
                 CustomerRetention = g.OrderByDescending(s => s.DateAdded)
@@ -430,30 +420,30 @@ namespace PReMaSys.Models
         }
 
 
-        private int CalculatePoints(SalesPerformance salesPerformance, PerformanceCriteria criteria)
+        private int CPoints(SalesPerformance salesPerformance, PerformanceCriteria criteria)
         {
             switch (criteria.RewardsCriteria)
             {
                 case "Sales Revenue":
-                    return CalculateSalesRevenuePoints(salesPerformance);
+                    return SalesRevenuePoints(salesPerformance);
                 case "Gross Profit":
-                    return CalculateGrossProfitPoints(salesPerformance);
+                    return GrossProfitPoints(salesPerformance);
                 case "Sales Volume":
-                    return CalculateSalesVolumePoints(salesPerformance);
+                    return SalesVolumePoints(salesPerformance);
                 case "Conversion Rate":
-                    return CalculateConversionRatePoints(salesPerformance);
+                    return ConversionRatePoints(salesPerformance);
                 case "Average Deal Size":
-                    return CalculateAverageDealSizePoints(salesPerformance);
+                    return AverageDealSizePoints(salesPerformance);
                 case "Customer Acquisition":
-                    return CalculateCustomerAcquisitionPoints(salesPerformance);
+                    return CustomerAcquisitionPoints(salesPerformance);
                 case "Customer Retention":
-                    return CalculateCustomerRetentionPoints(salesPerformance);
+                    return CustomerRetentionPoints(salesPerformance);
                 default:
                     return 0;
             }
         }
 
-        private int CalculateSalesRevenuePoints(SalesPerformance salesPerformance)
+        private int SalesRevenuePoints(SalesPerformance salesPerformance)
         {
             decimal salesRevenue = salesPerformance.SalesRevenue ?? 0;
 
@@ -467,7 +457,7 @@ namespace PReMaSys.Models
                 return 10;
         }
 
-        private int CalculateGrossProfitPoints(SalesPerformance salesPerformance)
+        private int GrossProfitPoints(SalesPerformance salesPerformance)
         {
             decimal grossProfit = salesPerformance.SellingPricePerUnit - salesPerformance.CostPricePerUnit;
 
@@ -481,9 +471,9 @@ namespace PReMaSys.Models
                 return 0;
         }
 
-        private int CalculateSalesVolumePoints(SalesPerformance salesPerformance)
+        private int SalesVolumePoints(SalesPerformance salesPerformance)
         {
-            int salesVolume = salesPerformance.SalesVolume;
+            int salesVolume = (int)salesPerformance.UnitsSold;
 
             if (salesVolume >= 1000000)
                 return 2000;
@@ -495,7 +485,7 @@ namespace PReMaSys.Models
                 return 0;
         }
 
-        private int CalculateConversionRatePoints(SalesPerformance salesPerformance)
+        private int ConversionRatePoints(SalesPerformance salesPerformance)
         {
             decimal conversionRate = salesPerformance.ConversionR;
             decimal previousConversionRate = 0; // Get the previous conversion rate from the database for comparison
@@ -506,7 +496,7 @@ namespace PReMaSys.Models
                 return 0;
         }
 
-        private int CalculateAverageDealSizePoints(SalesPerformance salesPerformance)
+        private int AverageDealSizePoints(SalesPerformance salesPerformance)
         {
             decimal averageDealSize = salesPerformance.AverageDealSize;
             decimal previousAverageDealSize = 0; // Get the previous average deal size from the database for comparison
@@ -517,14 +507,14 @@ namespace PReMaSys.Models
                 return 0;
         }
 
-        private int CalculateCustomerAcquisitionPoints(SalesPerformance salesPerformance)
+        private int CustomerAcquisitionPoints(SalesPerformance salesPerformance)
         {
             int customerAcquisition = salesPerformance.CustomerAcquisition;
 
             return 50;
         }
 
-        private int CalculateCustomerRetentionPoints(SalesPerformance salesPerformance)
+        private int CustomerRetentionPoints(SalesPerformance salesPerformance)
         {
             decimal customerRetentionRate = salesPerformance.CustomerRetentionR;
 

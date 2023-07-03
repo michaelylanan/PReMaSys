@@ -24,22 +24,16 @@ namespace PReMaSys.Controllers
         }
         public IActionResult EmployeeRank()
         {
-            // Retrieve all sales performances
-            var allPerformances = _context.SalesPerformances.ToList();
-
-            // Combine the data for sales performances with the same salesperson
-            var combinedPerformances = allPerformances
-                .GroupBy(s => s.SalesPerson)
-                .Select(g => new SalesPerformance
+            var sPerformance = _context.SalesPerformances.ToList();
+            var cPerformance = sPerformance.GroupBy(s => s.SalesPerson).Select(g => new SalesPerformance
                 {
                     SalesPerson = g.Key,
                     UnitsSold = g.Sum(s => s.UnitsSold),
                     SalesRevenue = g.Sum(s => s.SalesRevenue),
                     SalesProfit = g.Sum(s => s.SalesProfit)
-                })
-                .ToList();
+                }).ToList();
 
-            return View(combinedPerformances);
+            return View(cPerformance);
         }
 
         public IActionResult ContactUs()
@@ -63,6 +57,7 @@ namespace PReMaSys.Controllers
 
             var list = _context.Rewards.ToList();
             list = _context.Rewards.Where(r => ((int)r.Status) == 2).ToList();
+
             if (searchby == "RewardName" && search != null)
             {
                 return View(list.Where(x => x.RewardName.Contains(search)).ToList());
@@ -125,7 +120,6 @@ namespace PReMaSys.Controllers
         {
             ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
 
-
             var list = _context.AddToCart.Where(c => c.ApplicationUser == user).ToList();
 
             decimal x = 0;
@@ -154,7 +148,6 @@ namespace PReMaSys.Controllers
             ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
 
             Rewards reward = _context.Rewards.Where(r => r.RewardsInformationId == id).SingleOrDefault();
-
 
             AddToCart cart = new AddToCart();
 

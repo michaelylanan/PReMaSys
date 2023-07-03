@@ -40,6 +40,7 @@ namespace PReMaSys.Models
         [Display(Name = "Customer Retention R")]
         public decimal CustomerRetentionR { get; set; }
         [Display(Name = "Date Added")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime DateAdded { get; set; }
         [Display(Name = "Date Modified")]
         public DateTime? DateModified { get; set; }
