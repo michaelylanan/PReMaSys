@@ -9,7 +9,7 @@ namespace PReMaSys.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-         /*   migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "AuditLogs",
                 schema: "prms",
                 columns: table => new
@@ -25,7 +25,7 @@ namespace PReMaSys.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AuditLogs", x => x.Id);
-                });*/
+                });
 
             migrationBuilder.CreateTable(
                 name: "EmployeeofThes",
