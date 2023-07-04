@@ -1,0 +1,81 @@
+﻿@model IEnumerable<PReMaSys.Models.PointsAllocation>
+@inject PReMaSys.Data.ApplicationDbContext _context
+
+@{
+    ViewData["Title"] = "Sales Criteria";
+     Layout = "~/Views/Shared/_LayoutLoggedin.cshtml";
+}
+
+<div class="row mt-5">
+    <div class="d-flex justify-content-center col-lg-6">
+@* <h1 class="criteria-header text-center mt-5">Sales Criteria</h1>*@
+<img src="~/img/critlogo.png" class="img-fluid criteria-logo mt-5 mb-5" alt=""/>
+</div>
+    <div class="d-flex justify-content-center mt-5 mb-5 col-lg-6">
+        <h5 class="criteria-desc fs-3">
+            Sales criteria with quota and equivalent points is a performance measurement system used to evaluate sales representatives. It combines a predefined sales target (quota) with assigned points for different sales activities. This comprehensive approach considers both results and the strategic value of sales efforts. It helps motivate sales teams, align individual goals with organizational objectives, and drive revenue growth.
+        </h5>
+    </div>
+</div>
+
+
+
+<div class="accordion" id="accordionExample">
+    @foreach (var timelineGroup in Model.GroupBy(p => p.TimeLine))
+    {
+        var timeline = timelineGroup.Key;
+        var cardId = $"card-{Guid.NewGuid()}";
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading-@cardId">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@cardId" aria-expanded="false" aria-controls="collapse-@cardId">
+                    @timeline
+                </button>
+            </h2>
+            <div id="collapse-@cardId" class="accordion-collapse collapse" aria-labelledby="heading-@cardId" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    @foreach (var criteriaGroup in timelineGroup.GroupBy(p => p.PerformanceCriteriaId))
+                    {
+                        var criteriaId = criteriaGroup.Key;
+                        var getCriteria = _context.PerformanceCriterias.FirstOrDefault(p => p.PerformanceCriteriaId == criteriaId)?.RewardsCriteria;
+
+                        <h4>@getCriteria</h4>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Equivalent Criteria Points
+                                    </th>
+                                    <th>
+                                        Criteria Quota
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in criteriaGroup)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PerformancePoints)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CriteriaQuota)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+}

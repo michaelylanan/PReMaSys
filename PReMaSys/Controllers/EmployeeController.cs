@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace PReMaSys.Controllers
 {
-    //[Authorize(Roles = "Sales")]
+    [Authorize(Roles = "Sales")]
     public class EmployeeController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -313,6 +313,12 @@ namespace PReMaSys.Controllers
                 TempData["ResultMessage2"] = "Sorry! Insufficient Points!";
                 return RedirectToAction("AddToCartDisplay");
             }
+        }
+
+        public IActionResult SalesCriteria()
+        {
+            var list = _context.PointsAllocation.ToList();
+            return View(list);
         }
     }
 }
