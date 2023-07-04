@@ -31,17 +31,6 @@
             <h2 class="accordion-header" id="heading-@cardId">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@cardId" aria-expanded="false" aria-controls="collapse-@cardId">
                     @timeline
-<<<<<<< HEAD
-                </a>
-            </h3>
-        </div> 
-        <div class="collapse" id="@cardId">
-            <div class="card-body">
-                @foreach (var criteriaGroup in timelineGroup.GroupBy(p => p.PerformanceCriteriaId))
-                {
-                    var criteriaId = criteriaGroup.Key;
-                    var getCriteria = _context.PerformanceCriterias.FirstOrDefault(p => p.PerformanceCriteriaId == criteriaId)?.RewardsCriteria;
-=======
                 </button>
             </h2>
             <div id="collapse-@cardId" class="accordion-collapse collapse" aria-labelledby="heading-@cardId" data-bs-parent="#accordionExample">
@@ -50,7 +39,6 @@
                     {
                         var criteriaId = criteriaGroup.Key;
                         var getCriteria = _context.PerformanceCriterias.FirstOrDefault(p => p.PerformanceCriteriaId == criteriaId)?.RewardsCriteria;
->>>>>>> Accordion Fixed SalesCriteriaAdmin
 
                         <h4>@getCriteria</h4>
 
@@ -85,6 +73,7 @@
         </div>
     }
 </div>
+
 
 
 @section Scripts {
