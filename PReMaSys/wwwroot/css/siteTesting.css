@@ -20,7 +20,7 @@ html {
     height: 230px;
 }
 
-.nav-item {
+.nav-item, .nav-link-form {
     color: white;
 }
 
@@ -171,7 +171,7 @@ ul.navbar-list {
 }
 
 
-    .nav-link-admin:hover, .nav-link-employee:hover, .nav-link-form:hover, .option-link:hover, .nav-link-employee2:hover, .nav-link-admin2:hover {
+    .nav-link-admin:hover, .nav-link-employee:hover, .nav-link-form:hover, .option-link:hover, .nav-link-employee2:hover, .nav-link-admin2:hover{
         background-color: #75ab6c;
         color: black;
     }
@@ -313,6 +313,10 @@ ul.navbar-list {
     transform: translate(-50%, -50%);
   /*  color: #e8ac04;*/
 }
+
+/*.criteria-card {
+    background: #46c764;
+}*/
 
 /*.criteria-logo {
     opacity: 0.8;
