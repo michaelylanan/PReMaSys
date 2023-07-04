@@ -9,11 +9,11 @@
 
 <table class="table table-hover border-success text-center mt-5" id="ranktable">
     <thead>
-        <tr>
-            <th>Sales Person</th>
-            <th>Units Sold</th>
-            <th>Sales Revenue</th>
-            <th>Sales Profit</th>
+        <tr style="text-align:center;">
+            <th style="text-align:center;">Sales Person</th>
+            <th style="text-align:center;">Units Sold</th>
+            <th style="text-align:center;">Sales Revenue</th>
+            <th style="text-align:center;">Sales Profit</th>
         </tr>
     </thead>
     <tbody>
@@ -21,9 +21,9 @@
         {
             <tr>
                 <td>@performance.SalesPerson</td>
-                <td>@performance.UnitsSold</td>
-                <td>@performance.SalesRevenue</td>
-                <td>@performance.SalesProfit</td>
+                <td>@string.Format("{0:#,##0}",@performance.UnitsSold)</td>
+                <td>&#8369; @string.Format("{0:#,##0}",@performance.SalesRevenue)</td>
+                <td>&#8369; @string.Format("{0:#,##0}",@performance.SalesProfit)</td>
             </tr>
         }
     </tbody>

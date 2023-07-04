@@ -4,7 +4,7 @@
     ViewData["Title"] = "Forecasts";
     Layout = "~/Views/Shared/_LayoutLoggedin.cshtml";
 
-    var getProfit = _context.SalesPerformances.ToList();
+    var getProfit = ViewBag.User as List<SalesPerformance>;
 }
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>

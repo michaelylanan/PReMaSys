@@ -73,6 +73,11 @@ namespace PReMaSys.Controllers
 
         public IActionResult Forecasts() 
         {
+            string userId = _userManager.GetUserId(HttpContext.User);
+
+            var list = _context.SalesPerformances.Where(a => a.LoggedUser == userId).ToList();
+            ViewBag.User = list;
+
             return View();
         }
 
