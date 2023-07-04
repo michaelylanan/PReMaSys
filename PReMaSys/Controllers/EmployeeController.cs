@@ -314,5 +314,11 @@ namespace PReMaSys.Controllers
                 return RedirectToAction("AddToCartDisplay");
             }
         }
+
+        public IActionResult SalesCriteria()
+        {
+            var list = _context.PointsAllocation.ToList();
+            return View(list);
+        }
     }
 }
