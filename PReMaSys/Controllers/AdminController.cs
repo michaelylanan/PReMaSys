@@ -43,6 +43,7 @@ namespace PReMaSys.Controllers
 
         public IActionResult Ranking()
         {
+
             return View();
         }
 
