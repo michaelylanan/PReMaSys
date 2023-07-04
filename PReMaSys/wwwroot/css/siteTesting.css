@@ -73,7 +73,7 @@ html {
 
 @media (max-width: 990px) {
     .criteria-logo{
-        min-width: 300px;
+        min-width: 280px;
     }
 }
 
@@ -306,23 +306,23 @@ ul.navbar-list {
 
 .criteria-header {
     font-family: 'Pacifico', cursive;
-    font-size: 70px;
+    font-size: 60px;
     position: absolute;
-    top: 30%;
-    left: 50%;
+    bottom: 55%;
+    left: 32%;
     transform: translate(-50%, -50%);
-  /*  color: #e8ac04;*/
+    text-shadow: 5px 5px 5px white;
+    /*  color: #e8ac04;*/
 }
 
 /*.criteria-card {
     background: #46c764;
 }*/
 
-/*.criteria-logo {
-    opacity: 0.8;
-    
+.criteria-logo {
+    width:400px;
 }
 
-, container1 {
+/*, container1 {
     position: relative;
 }*/

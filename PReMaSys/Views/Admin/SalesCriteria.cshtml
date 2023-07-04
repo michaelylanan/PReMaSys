@@ -6,20 +6,19 @@
      Layout = "~/Views/Shared/_LayoutLoggedin.cshtml";
 }
 
-
-<div class="d-flex justify-content-center">
- <h1 class="criteria-header text-center mt-5">Sales Criteria</h1>
-<img src="~/img/testing.png" class="img-fluid criteria-logo w-25 mt-5" alt=""/>
+<div class="row mt-5">
+    <div class="d-flex justify-content-center col-lg-6">
+@* <h1 class="criteria-header text-center mt-5">Sales Criteria</h1>*@
+<img src="~/img/critlogo.png" class="img-fluid criteria-logo mt-5 mb-5" alt=""/>
 </div>
-
-<div style="border: solid black; padding:2px">
-    <div class="d-flex justify-content-center mt-5">
-        <h5 class="criteria-desc">
+    <div class="d-flex justify-content-center mt-5 mb-5 col-lg-6">
+        <h5 class="criteria-desc fs-3">
             Sales criteria with quota and equivalent points is a performance measurement system used to evaluate sales representatives. It combines a predefined sales target (quota) with assigned points for different sales activities. This comprehensive approach considers both results and the strategic value of sales efforts. It helps motivate sales teams, align individual goals with organizational objectives, and drive revenue growth.
         </h5>
-
     </div>
 </div>
+
+
 
 <div class="accordion" id="accordionExample">
     @foreach (var timelineGroup in Model.GroupBy(p => p.TimeLine))
