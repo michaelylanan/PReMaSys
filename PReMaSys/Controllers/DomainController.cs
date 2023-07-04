@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace PReMaSys.Controllers
 {
-   [Authorize(Roles = "Domain")]
+   //[Authorize(Roles = "Domain")]
     public class DomainController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -31,6 +31,11 @@ namespace PReMaSys.Controllers
             _emailSender = emailSender;
         }
         public IActionResult DomainPage()
+        {
+            return View();
+        }
+
+        public IActionResult Subscription()
         {
             return View();
         }

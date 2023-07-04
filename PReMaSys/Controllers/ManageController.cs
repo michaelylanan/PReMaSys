@@ -6,7 +6,7 @@ using PReMaSys.ViewModel;
 
 namespace PReMaSys.Controllers
 {
-    [Authorize(Roles ="Domain")]
+    //[Authorize(Roles ="Domain")]
     public class ManageController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
