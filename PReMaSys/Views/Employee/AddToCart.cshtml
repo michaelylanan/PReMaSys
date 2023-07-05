@@ -17,7 +17,7 @@
      <li class="list-group-item border-success"> <h1 class="text-center fw-bold"> @Model.RewardName</h1></li>
     <li class="list-group-item border-success"><h4>Reward Category: @Model.Category</h4></li>
     <li class="list-group-item border-success"><h4>Reward Description: @Model.Description</h4></li>
-    <li class="list-group-item border-success"> <h4>Reward Points Cost: @Model.PointsCost</h4></li>
+    <li class="list-group-item border-success"> <h4>Reward Points Cost: @string.Format("{0:#,##0}",@Model.PointsCost)</h4></li>
             <li class="list-group-item text-center border-success">
                 <div>
                     <label for="qty">Quantity:</label>

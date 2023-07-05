@@ -8,7 +8,7 @@
 <partial name="_EmployeePageTablePartial" />  
 <div class="point-container text-center mt-5">
     <h1 class="point-title-header">My Points</h1>
-    <h2 class="point-total-header" style="font-size:60px"><u>@ViewBag.Balance</u></h2>
+    <h2 class="point-total-header" style="font-size:60px"><u> @string.Format("{0:#,##0}",@ViewBag.Balance)</u></h2>
 </div>
 
 <div class="rewards-tab text-center">
@@ -43,9 +43,9 @@
                             <div class="card-body text-center">
                                 <figure>
                                     <h5 class="card-title text-success"><figcaption>@Html.DisplayFor(modelItem => item.RewardName)</figcaption></h5>
-                                    <p class="card-text mt-3 mb-4"><figcaption>@Html.DisplayFor(modelItem => item.PointsCost) Points</figcaption></p> 
+                                        <p class="card-text mt-3 mb-4"><figcaption>@string.Format("{0:#,##0}", item.PointsCost) Points</figcaption></p>
 
-                                    <!-- Calls AddToCart method in Employee Controller to execute instruction-->
+                                        <!-- Calls AddToCart method in Employee Controller to execute instruction-->
                                    <figcaption>
                                         <a class="btn btn-success" href="@Url.Action("AddToCart", "Employee", new { id = item.RewardsInformationId})">View Reward Details</a>
 
