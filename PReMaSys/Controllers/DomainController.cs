@@ -37,20 +37,39 @@ namespace PReMaSys.Controllers
 
         public IActionResult Subscription()
         {
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+
+            var list = _context.Rewards.Where(r => r.ApplicationUser == checker && r.Status != Status.Approved).ToList();
+            int totalRewards = list.Count;
+
+            ViewBag.TotalRewards = totalRewards;
+
             return View();
         }
 
         //Reports
         public IActionResult ReportsPage() 
         {
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+
+            var list = _context.Rewards.Where(r => r.ApplicationUser == checker && r.Status != Status.Approved).ToList();
+            int totalRewards = list.Count;
+
+            ViewBag.TotalRewards = totalRewards;
             return View();
         }       
 
         public IActionResult Ranking() 
         {
-            var salesP = _context.SalesPerformances.ToList();
 
-            var combP = salesP.GroupBy(s => s.SalesPerson).Select(g => new SalesPerformance
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Admin");
+
+            var sPerformance = _context.SalesPerformances.Where(s => s.LoggedUser == checker.Id).ToList();
+
+            var combP = sPerformance.GroupBy(s => s.SalesPerson).Select(g => new SalesPerformance
                 {
                     SalesPerson = g.Key,
                     UnitsSold = g.Sum(s => s.UnitsSold),
@@ -73,33 +92,84 @@ namespace PReMaSys.Controllers
                 RemainingP = remaining
             };
 
+            var checker2 = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+
+
+            var listR = _context.Rewards.Where(r => r.ApplicationUser == checker2 && r.Status != Status.Approved).ToList();
+            int totalRewards = listR.Count;
+
+            ViewBag.TotalRewards = totalRewards;
+
             return View(model);
         }
 
         public IActionResult Forecasts() 
-        {
-            string userId = _userManager.GetUserId(HttpContext.User);
+        {           
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
 
-            var list = _context.SalesPerformances.Where(a => a.LoggedUser == userId).ToList();
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Admin");
+            var checker2 = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+
+
+            var list = _context.SalesPerformances.Where(a => a.LoggedUser == checker.Id).ToList();
             ViewBag.User = list;
+
+            var listR = _context.Rewards.Where(r => r.ApplicationUser == checker2 && r.Status != Status.Approved).ToList();
+            int totalRewards = listR.Count;
+
+            ViewBag.TotalRewards = totalRewards;
 
             return View();
         }
 
         public IActionResult Diagnostic() 
         {
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
+
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Admin");
+
+            var list = _context.SalesPerformances.Where(a => a.LoggedUser == checker.Id).ToList();
+            ViewBag.User = list;
+
+
+            var checker2 = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+            var listR = _context.Rewards.Where(r => r.ApplicationUser == checker2 && r.Status != Status.Approved).ToList();
+            int totalRewards = listR.Count;
+
+            ViewBag.TotalRewards = totalRewards;
+
             return View();
         }
 
         public IActionResult Descriptive() 
         {
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
+
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Admin");
+
+            var list = _context.SalesPerformances.Where(a => a.LoggedUser == checker.Id).ToList();
+
+            ViewBag.User = list;
+
+            var checker2 = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+
+
+            var listR = _context.Rewards.Where(r => r.ApplicationUser == checker2 && r.Status != Status.Approved).ToList();
+            int totalRewards = listR.Count;
+
+            ViewBag.TotalRewards = totalRewards;
+
             return View();
         }
 
         /*APPROVAL OF REWARDS-------------------------------------------------------------------------------------------------------------------------------------*/
         public IActionResult ApproveRewards(string id)
         {
-            var list = _context.Rewards.ToList();
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+
+            var list = _context.Rewards.Where(r => r.ApplicationUser == checker && r.Status != Status.Approved ).ToList();
+            
             return View(list);
 
         }
@@ -143,6 +213,14 @@ namespace PReMaSys.Controllers
         /* ------------------------------------------------------------------------------------------------------------------------------------------------*/
         public IActionResult AdminAllRoles()
         {
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+
+            var list = _context.Rewards.Where(r => r.ApplicationUser == checker && r.Status != Status.Approved).ToList();
+            int totalRewards = list.Count;
+
+            ViewBag.TotalRewards = totalRewards;
+
             var roles = _roleManager.Roles;
 
             return View(roles);
@@ -153,6 +231,14 @@ namespace PReMaSys.Controllers
         [HttpGet]
         public IActionResult ListAdminRoles()
         {
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+
+            var listR = _context.Rewards.Where(r => r.ApplicationUser == checker && r.Status != Status.Approved).ToList();
+            int totalRewards = listR.Count;
+
+            ViewBag.TotalRewards = totalRewards;
+
             ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
             var list = _context.Users.Where(c => c.user == user && c.IsArchived == null).ToList();
             return View(list);
@@ -163,6 +249,13 @@ namespace PReMaSys.Controllers
         /*CREATE NEW ADMIN ROLE*/
         public IActionResult AddRole()
         {
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+
+            var list = _context.Rewards.Where(r => r.ApplicationUser == checker && r.Status != Status.Approved).ToList();
+            int totalRewards = list.Count;
+
+            ViewBag.TotalRewards = totalRewards;
             return View();
         }
 
@@ -171,12 +264,15 @@ namespace PReMaSys.Controllers
         {
             string returnUrl = Url.Content("~/");
             var current = await _userManager.GetUserAsync(User);
+            string au = _userManager.GetUserId(HttpContext.User);
 
             var user = new ApplicationUser
             {
                 UserName = admin.Email,
                 Email = admin.Email,
-                user = current
+                user = current,
+                AddedBy = au
+                
             };
 
             if(admin.Password == admin.ConfirmPassword)
@@ -222,6 +318,14 @@ namespace PReMaSys.Controllers
         [HttpGet]
         public async Task<IActionResult> EditAdminRole(string id)
         {
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+
+            var list = _context.Rewards.Where(r => r.ApplicationUser == checker).ToList();
+            int totalRewards = list.Count;
+
+            ViewBag.TotalRewards = totalRewards;
+
             var admin = await _userManager.FindByIdAsync(id);
 
             if (admin == null)
@@ -304,7 +408,16 @@ namespace PReMaSys.Controllers
         /*SALES-POINTS PROFIT CRUD---------------------------------------------------------------------------------------------------------------------------------*/
         public IActionResult SEPoints() 
         {
-            var list = _context.SERecord.ToList();
+            ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
+
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Support");
+
+            var list = _context.SERecord.Where(s => s.SupportId == checker).ToList();
+
+            var listR = _context.Rewards.Where(r => r.ApplicationUser == checker && r.Status != Status.Approved).ToList();
+            int totalRewards = listR.Count;
+
+            ViewBag.TotalRewards = totalRewards;
             return View(list);
         }
 

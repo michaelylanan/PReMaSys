@@ -51,6 +51,8 @@ namespace PReMaSys.Models
         public DateTime? DateModified { get; set; }
 
         public DateTime? IsArchived { get; set; }
+
+        public ApplicationUser? SupportId { get; set; }
     }
 }
 

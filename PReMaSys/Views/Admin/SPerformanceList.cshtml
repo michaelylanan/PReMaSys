@@ -9,18 +9,17 @@
 <a asp-action="SalesPerformance" class="btn btn-success p-2 mb-3 d-inline-block">Create New +</a>
 <div class="table-responsive">
     <table class="table table-hover" id=datatable>
-    <thead>
+        <thead style="background-color:#59FF60">
         <tr>
             <th>Sales ID</th>
             <th>Sales Person</th>
-            <th>Units Sold</th>
+            <th>Sales Volume</th>
             <th>Unit Type</th>
             <th>Particulars</th>
             <th>Cost Price Per Unit</th>
             <th>Selling Price Per Unit</th>
             <th>Sales Revenue</th>
             <th>Sales Profit</th>
-            <th>Sales Volume</th>
             <th>Conversion Rate</th>
             <th>Average Deal Size</th>
             <th>Customer Acquisition</th>
@@ -47,15 +46,14 @@
                     <td>@item.UnitsSold</td>
                     <td>@item.UnitType</td>
                     <td>@item.Particulars</td>
-                    <td>@item.CostPricePerUnit</td>
-                    <td>@item.SellingPricePerUnit</td>
-                    <td>@item.SalesRevenue</td>
-                    <td>@item.SalesProfit</td>
-                    <td>@item.SalesVolume</td>
-                    <td>@item.ConversionR</td>
+                    <td>&#8369; @string.Format("{0:#,##0}",@item.CostPricePerUnit)</td>
+                    <td>&#8369; @string.Format("{0:#,##0}",@item.SellingPricePerUnit)</td>
+                    <td>&#8369; @string.Format("{0:#,##0}",@item.SalesRevenue)</td>
+                    <td>&#8369; @string.Format("{0:#,##0}",@item.SalesProfit)</td>
+                    <td>@item.ConversionR %</td>
                     <td>@item.AverageDealSize</td>
                     <td>@item.CustomerAcquisition</td>
-                    <td>@item.CustomerRetentionR</td>
+                    <td>@item.CustomerRetentionR %</td>
                     <td>@item.DateAdded</td>
                     <td>@item.DateModified</td>
                     <td>

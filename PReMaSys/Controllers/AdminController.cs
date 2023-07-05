@@ -59,18 +59,34 @@ namespace PReMaSys.Controllers
 
         public IActionResult Diagnostic()
         {
+            string userId = _userManager.GetUserId(HttpContext.User);
+
+            var list = _context.SalesPerformances.Where(a => a.LoggedUser == userId).ToList();
+            ViewBag.User = list;
+
             return View();
         }
 
         public IActionResult Descriptive()
         {
+            string userId = _userManager.GetUserId(HttpContext.User);
+
+            var list = _context.SalesPerformances.Where(a => a.LoggedUser == userId).ToList();
+            ViewBag.User = list;
+
             return View();
         }
 
         /*View of Rewards List -----------------------------------------------------------------------------------------------------------*/
-        public IActionResult Reward()
+        public IActionResult Reward(string id)
         {
-            var list = _context.Rewards.ToList();
+            string userId = _userManager.GetUserId(HttpContext.User);
+            var checker = _context.ApplicationUsers.FirstOrDefault(a => a.Id == userId);
+            var checker2 = checker.AddedBy;
+
+            var supportUser = _context.ApplicationUsers.Where(u => u.AddedBy == checker2 && u.Role == "Support").Select(u => u.Id).FirstOrDefault();
+            var list = _context.Rewards.Where(r => r.SupportId == supportUser).ToList();
+
             return View(list);
         }
 
@@ -255,7 +271,10 @@ namespace PReMaSys.Controllers
 
         public IActionResult SalesPerformanceRanking()
         {
-            var salesP = _context.SalesPerformances.ToList();
+
+            string userId = _userManager.GetUserId(HttpContext.User);
+
+            var salesP = _context.SalesPerformances.Where(s => s.LoggedUser == userId).ToList();
 
             var combP = salesP.GroupBy(s => s.SalesPerson).Select(g => new SalesPerformance
                 {

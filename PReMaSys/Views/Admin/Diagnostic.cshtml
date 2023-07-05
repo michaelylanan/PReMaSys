@@ -4,6 +4,8 @@
 @{
     ViewData["Title"] = "Diagnostic Analysis";
     Layout = "~/Views/Shared/_LayoutLoggedin.cshtml";
+
+    var getProfit = ViewBag.User as List<SalesPerformance>;
 }
 
 <style>
@@ -198,17 +200,17 @@
     DateTime lastYear = currentDate.AddYears(-1);
     DateTime currentYear = currentDate;
 
-    var lastMonthSales = _context.SalesPerformances
+    var lastMonthSales = getProfit
         .Where(s => s.DateAdded >= lastMonth && s.DateAdded < currentMonth)
         .ToList();
-    var currentMonthSales = _context.SalesPerformances
+    var currentMonthSales = getProfit
         .Where(s => s.DateAdded >= new DateTime(currentMonth.Year, currentMonth.Month, 1) && s.DateAdded <= currentDate)
         .ToList();
 
-    var lastYearSales = _context.SalesPerformances
+    var lastYearSales = getProfit
         .Where(s => s.DateAdded >= lastYear && s.DateAdded < currentYear)
         .ToList();
-    var currentYearSales = _context.SalesPerformances
+    var currentYearSales = getProfit    
         .Where(s => s.DateAdded >= new DateTime(currentYear.Year, 1, 1) && s.DateAdded <= currentDate)
         .ToList();
 }

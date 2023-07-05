@@ -215,11 +215,13 @@ namespace PReMaSys.Controllers
                 {
                     result = await _userManager.AddToRoleAsync(user, role.Name);
                     user.IsChecked = true;
+                    user.Role = role.Name;
                 }
                 else if (!model[i].IsSelected && (await _userManager.IsInRoleAsync(user, role.Name)))
                 {
                     result = await _userManager.RemoveFromRoleAsync(user, role.Name);
                     user.IsChecked = false;
+                    user.Role = null;
                 }
                 else
                 {

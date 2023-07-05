@@ -42,6 +42,8 @@ namespace PReMaSys.Models
         [Display(Name = "Date Modified")]
         public DateTime? DateModified { get; set; }
 
+        public string? SupportId { get; set; }
+
         /* [Required(ErrorMessage ="Required.")]
          public virtual Category Category { get; set; }*/
 

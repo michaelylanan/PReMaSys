@@ -3,8 +3,9 @@
 
 @{
     ViewData["Title"] = "Descriptive Analysis";
- Layout = "~/Views/Shared/DomainAdminDash.cshtml";
+    Layout = "~/Views/Shared/DomainAdminDash.cshtml";
 
+    var getProfit = ViewBag.User as List<SalesPerformance>;
 
 }
 
@@ -18,7 +19,7 @@
 
     int currentYear2 = currentDate.Year;
 
-    var monthlyData = _context.SalesPerformances
+    var monthlyData = getProfit
            .Where(s => s.DateAdded.Year == currentYear2)
            .GroupBy(s => new { Month = s.DateAdded.Month })
            .Select(g => new { Month = g.Key.Month, TotalUnitsSold = g.Sum(s => s.UnitsSold) })
@@ -28,7 +29,7 @@
 
 
     // Calculate monthly data for SalesProfit
-    var monthlyProfit = _context.SalesPerformances
+    var monthlyProfit = getProfit
         .Where(s => s.DateAdded.Year == currentYear2)
         .GroupBy(s => new { Month = s.DateAdded.Month })
         .Select(g => new { Month = g.Key.Month, TotalProfit = g.Sum(s => s.SalesProfit) })
@@ -36,7 +37,7 @@
         .ToList();
 
     // Calculate monthly data for SalesRevenue
-    var monthlyRevenue = _context.SalesPerformances
+    var monthlyRevenue = getProfit
         .Where(s => s.DateAdded.Year == currentYear2)
         .GroupBy(s => new { Month = s.DateAdded.Month })
         .Select(g => new { Month = g.Key.Month, TotalRevenue = g.Sum(s => s.SalesRevenue) })
@@ -44,7 +45,7 @@
         .ToList();
 
     // Calculate monthly data for UnitsSold
-    var monthlyUnitsSold = _context.SalesPerformances
+    var monthlyUnitsSold = getProfit
         .Where(s => s.DateAdded.Year == currentYear2)
         .GroupBy(s => new { Month = s.DateAdded.Month })
         .Select(g => new { Month = g.Key.Month, TotalUnitsSold = g.Sum(s => s.UnitsSold) })

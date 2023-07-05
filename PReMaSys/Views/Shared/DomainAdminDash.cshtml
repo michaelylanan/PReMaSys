@@ -67,8 +67,14 @@
                 <a class="nav-link-admin2" asp-area="" asp-controller="Domain" asp-action="ListAdminRoles">Admin Roles</a>
               </li>
              <li class="navbar-item">
-                <a class="nav-link-admin" asp-area="" asp-controller="Domain" asp-action="ApproveRewards">Rewards</a>
-             </li>
+                <a class="nav-link-admin" asp-area="" asp-controller="Domain" asp-action="ApproveRewards">
+                    <i class="fas fa-gift fa-1x"></i>
+                    <span class="badge rounded-pill badge-notification bg-danger">@ViewBag.TotalRewards</span>
+                </a>
+               @* <a class="nav-link-admin" asp-area="" asp-controller="Domain" asp-action="ApproveRewards">
+                    Rewards <span class="badge">@ViewBag.TotalRewards</span>
+                </a>*@
+            </li>
              <li class="navbar-item">
                 <a class="nav-link-admin2" asp-area="" asp-controller="Domain" asp-action="SEPoints">Sales Profit Points</a>
              </li>

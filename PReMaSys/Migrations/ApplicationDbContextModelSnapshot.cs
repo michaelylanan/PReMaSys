@@ -168,6 +168,9 @@ namespace PReMaSys.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("AddedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("BIRTIN")
                         .HasColumnType("nvarchar(max)");
 
@@ -246,6 +249,9 @@ namespace PReMaSys.Migrations
 
                     b.Property<byte[]>("Pic")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SECNumber")
                         .HasColumnType("nvarchar(max)");
@@ -725,6 +731,9 @@ namespace PReMaSys.Migrations
                     b.Property<int?>("Status")
                         .HasColumnType("int");
 
+                    b.Property<string>("SupportId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("RewardsInformationId");
 
                     b.HasIndex("ApplicationUserId");
@@ -955,9 +964,14 @@ namespace PReMaSys.Migrations
                     b.Property<string>("SERIdId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("SupportIdId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("SEmployeeRecordsID");
 
                     b.HasIndex("SERIdId");
+
+                    b.HasIndex("SupportIdId");
 
                     b.ToTable("SERecord", "prms");
                 });
@@ -1109,7 +1123,13 @@ namespace PReMaSys.Migrations
                         .WithMany()
                         .HasForeignKey("SERIdId");
 
+                    b.HasOne("PReMaSys.Data.ApplicationUser", "SupportId")
+                        .WithMany()
+                        .HasForeignKey("SupportIdId");
+
                     b.Navigation("SERId");
+
+                    b.Navigation("SupportId");
                 });
 
             modelBuilder.Entity("PReMaSys.Models.SalesPerformance", b =>

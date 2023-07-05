@@ -5,10 +5,11 @@
     Layout = "~/Views/Shared/_LayoutLoggedin.cshtml";
 }
 
+
 <h1 class="text-center mt-5 mb-5">Rewards</h1>
 <div class="table-responsive">
 <table class="table table-hover" id="rewardsrecords">
-    <thead>
+    <thead style="background-color:#59FF60">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Picture)
@@ -55,10 +56,10 @@
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.RewardCost)
+                        &#8369; @string.Format("{0:#,##0}", item.RewardCost)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.PointsCost)
+                        @string.Format("{0:#,##0}", item.PointsCost)
                     </td>
                 </tr>
             }

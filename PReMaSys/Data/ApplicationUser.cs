@@ -34,7 +34,11 @@ namespace PReMaSys.Data
 
         public bool IsChecked { get; set; }
 
+        public string? Role { get; set; }
+
         public DateTime? IsArchived { get; set; }
+
+        public string? AddedBy { get; set; }
     }
 
     public enum BusinessType

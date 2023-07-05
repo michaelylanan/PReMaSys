@@ -250,7 +250,7 @@ namespace PReMaSys.Controllers
             var latest = user.Id;
             var getId = _context.ApplicationUsers.FirstOrDefault(u => u.Id == latest);
             string aS = getId?.Id.ToString();
-            var userzz = new SERecord   
+            var userzz = new SERecord
             {
                 SERId = getId,
                 AppSerId = aS,
@@ -259,6 +259,7 @@ namespace PReMaSys.Controllers
                 EmployeeLastname = se.EmployeeLastname,
                 EmployeeAddress = se.EmployeeAddress,
                 EmployeeBirthdate = se.EmployeeBirthdate,
+                SupportId = cUser
             };
 
             _context.SERecord.Add(userzz);
@@ -287,6 +288,8 @@ namespace PReMaSys.Controllers
         public IActionResult CreateR(Rewards record, IFormFile Picture) //Good
         {
             ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+            string uId = _userManager.GetUserId(HttpContext.User);
+
             var rewards = new Rewards()
             {
                 ApplicationUser = user,
@@ -298,6 +301,7 @@ namespace PReMaSys.Controllers
                 DateAdded = DateTime.Now,
                 Category = record.Category,
                 Status = record.Status,
+                SupportId = uId
             };
 
             if (Picture != null)
@@ -447,7 +451,8 @@ namespace PReMaSys.Controllers
                         EmployeeFirstname = row["EmployeeFirstname"].ToString(),
                         EmployeeLastname = row["EmployeeLastname"].ToString(),
                         EmployeeAddress = row["EmployeeAddress"].ToString(),
-                        EmployeeBirthdate = row["EmployeeBirthdate"].ToString()
+                        EmployeeBirthdate = row["EmployeeBirthdate"].ToString(),
+                        SupportId = cUser
                     };
 
                     _context.SERecord.Add(seRecord);
