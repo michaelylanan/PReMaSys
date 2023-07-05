@@ -2,25 +2,49 @@
 @{
      Layout = "~/Views/Shared/_LayoutEmployeeLoggedin.cshtml";
     ViewData["Title"] = "Ranking Page";
+
+    // Sort the Model based on SalesProfit in descending order
+    var sModel = Model.OrderByDescending(p => p.SalesProfit);
  
 }
-<partial name="_EmployeePageTablePartial" />   
-<h1 class="page-title-header text-center mt-5"> Employee Rankings</h1>
+
+<style>
+    .text-center {
+        text-align: center;
+    }
+
+    .image-contain {
+        display: flex;
+        justify-content: center;
+        margin-top: 1em;
+        align-items: center;
+</style>
+<partial name="_EmployeePageTablePartial" />  
+
+<div class="text-center">
+    <h1 class="page-title-header mt-5">Employee Rankings</h1>
+    <div class="image-contain">
+        <img src="~/img/trophy.png" alt="Default Image" style="height: 10em;">
+    </div>
+</div>
+
 
 <div class="table-responsive">
 <table class="table table-hover border-success text-center mt-5" id="ranktable">
     <thead>
         <tr style="text-align:center;">
-            <th style="text-align:center;">Sales Person</th>
-            <th style="text-align:center;">Units Sold</th>
-            <th style="text-align:center;">Sales Revenue</th>
-            <th style="text-align:center;">Sales Profit</th>
+            <th style="text-align:center; background-color:#A5FFA9">Rank</th>
+            <th style="text-align:center; background-color:#A5FFA9">Sales Person</th>
+            <th style="text-align:center; background-color:#A5FFA9">Units Sold</th>
+            <th style="text-align:center; background-color:#A5FFA9">Sales Revenue</th>
+            <th style="text-align:center; background-color:#A5FFA9">Sales Profit</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var performance in Model)
+        @foreach (var (index, performance) in sModel.Select((value, i) => (i + 1, value)))
         {
             <tr>
+                <td>@index</td>
                 <td>@performance.SalesPerson</td>
                 <td>@string.Format("{0:#,##0}",@performance.UnitsSold)</td>
                 <td>&#8369; @string.Format("{0:#,##0}",@performance.SalesRevenue)</td>
