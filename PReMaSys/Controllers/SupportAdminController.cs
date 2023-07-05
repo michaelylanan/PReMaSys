@@ -34,8 +34,13 @@ namespace PReMaSys.Controllers
 
         public IActionResult SupportPage() //Good
         {
+            ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+            var checker = _context.ApplicationUsers.Where(a => a.user == user && a.Role == "Sales");
+
+            var checkerIds = checker.Select(a => a.Id);
+
             int notificationCount = _context.Purchase
-                .Count(p => p.DateModified == null);
+                .Count(p => p.DateModified == null && checkerIds.Contains(p.ApplicationUser.Id));
 
             // Pass the count to the view
             ViewData["NotificationCount"] = notificationCount;
@@ -44,10 +49,13 @@ namespace PReMaSys.Controllers
         public IActionResult NotificationPage() //Good
         {
             ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+            var checker = _context.ApplicationUsers.Where(a => a.user == user && a.Role == "Sales");
+
+            var checkerIds = checker.Select(a => a.Id);
 
             var list = _context.Purchase
-             .Where(p => p.DateModified == null)
-             .ToList();
+                .Where(p => p.DateModified == null && checkerIds.Contains(p.ApplicationUser.Id))
+                .ToList();
 
             return View(list);
         }
@@ -99,6 +107,16 @@ namespace PReMaSys.Controllers
         public IActionResult ListSalesEmployee() //Good
         {
             ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+            var checker = _context.ApplicationUsers.Where(a => a.user == user && a.Role == "Sales");
+
+            var checkerIds = checker.Select(a => a.Id);
+
+            int notificationCount = _context.Purchase
+                .Count(p => p.DateModified == null && checkerIds.Contains(p.ApplicationUser.Id));
+
+            // Pass the count to the view
+            ViewData["NotificationCount"] = notificationCount;
+            /*ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));*/
             var list = _context.Users.Where(c => c.user == user && c.IsArchived == null).ToList();
             return View(list);
         }
@@ -195,6 +213,16 @@ namespace PReMaSys.Controllers
         /*CREATE NEW ADMIN ROLE*/
         public IActionResult SERecord() //Good
         {
+            ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+            var checker = _context.ApplicationUsers.Where(a => a.user == user && a.Role == "Sales");
+
+            var checkerIds = checker.Select(a => a.Id);
+
+            int notificationCount = _context.Purchase
+                .Count(p => p.DateModified == null && checkerIds.Contains(p.ApplicationUser.Id));
+
+            // Pass the count to the view
+            ViewData["NotificationCount"] = notificationCount;
             return View();
         }
 
@@ -273,6 +301,17 @@ namespace PReMaSys.Controllers
         public IActionResult RewardsRecord() //Good
         {
             ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+            var checker = _context.ApplicationUsers.Where(a => a.user == user && a.Role == "Sales");
+
+            var checkerIds = checker.Select(a => a.Id);
+
+            int notificationCount = _context.Purchase
+                .Count(p => p.DateModified == null && checkerIds.Contains(p.ApplicationUser.Id));
+
+            // Pass the count to the view
+            ViewData["NotificationCount"] = notificationCount;
+
+            /*ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));*/
             var list = _context.Rewards.Where(c => c.ApplicationUser == user).ToList();
             return View(list);
         }
@@ -280,6 +319,11 @@ namespace PReMaSys.Controllers
         //(1) Create Reward Information
         public IActionResult CreateR() //Good
         {
+            int notificationCount = _context.Purchase
+                .Count(p => p.DateModified == null);
+
+            // Pass the count to the view
+            ViewData["NotificationCount"] = notificationCount;
             return View();
         }
 
@@ -328,6 +372,17 @@ namespace PReMaSys.Controllers
         //(2) Edit Reward Informaiton
         public IActionResult EditR(int? id) //Good
         {
+            ApplicationUser user = _context.ApplicationUsers.FirstOrDefault(u => u.Id == _userManager.GetUserId(HttpContext.User));
+            var checker = _context.ApplicationUsers.Where(a => a.user == user && a.Role == "Sales");
+
+            var checkerIds = checker.Select(a => a.Id);
+
+            int notificationCount = _context.Purchase
+                .Count(p => p.DateModified == null && checkerIds.Contains(p.ApplicationUser.Id));
+
+            // Pass the count to the view
+            ViewData["NotificationCount"] = notificationCount;
+
             if (id == null)
             {
                 return RedirectToAction("RewardsRecord");
