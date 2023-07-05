@@ -46,7 +46,15 @@
                             <a class="nav-link-admin" asp-area="" asp-controller="SupportAdmin" asp-action="SupportPage">Dahsboard</a>
                         </li>
                         <li class="navbar-item">
-                            <a class="nav-link-admin2" asp-area="" asp-controller="SupportAdmin" asp-action="NotificationPage">Notifications <span class="badge">@ViewData["NotificationCount"]</span> </a>
+                            <a class="nav-link-admin" asp-area="" asp-controller="SupportAdmin" asp-action="NotificationPage" style="display:flex; align-items:center;">
+                                <p style="margin-right: 5px;">Notifications</p>
+                                <div style="display:flex">
+                                    <i class="fas fa-bell fa-1x"></i>
+                                    <span class="badge rounded-pill badge-notification bg-danger">@ViewData["NotificationCount"]</span>
+                                </div>
+                            </a>
+
+                            @*<a class="nav-link-admin2" asp-area="" asp-controller="SupportAdmin" asp-action="NotificationPage">Notifications <span class="badge">@ViewData["NotificationCount"]</span> </a>*@
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
