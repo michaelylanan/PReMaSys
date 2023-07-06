@@ -78,6 +78,20 @@ namespace PReMaSys.Controllers
 
         public IActionResult PaymentSuccess()
         {
+            //@TODO 
+            string au = _userManager.GetUserId(HttpContext.User);
+
+            var users = _context.ApplicationUsers.Where(r => r.Id == au).SingleOrDefault();
+
+            users.DatePaid = DateTime.Now;
+            var tempDate = DateTime.Now;
+            tempDate = tempDate.AddMonths(1);
+            users.DateExpiration = tempDate;
+            users.IsActive = true;
+
+            _context.ApplicationUsers.Update(users);
+            _context.SaveChanges();
+
             return View();
         }
 

@@ -39,6 +39,12 @@ namespace PReMaSys.Data
         public DateTime? IsArchived { get; set; }
 
         public string? AddedBy { get; set; }
+
+        public DateTime? DatePaid { get; set; }
+
+        public DateTime? DateExpiration { get; set; }
+
+        public bool? IsActive { get; set; }
     }
 
     public enum BusinessType

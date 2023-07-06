@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PReMaSys.Data;
 using PReMaSys.ViewModel;
 
@@ -20,6 +21,42 @@ namespace PReMaSys.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
         }
+
+        public ActionResult DisableExpiredUsers()
+        {
+            DateTime currentDate = DateTime.Now.Date;
+
+            var expiredUsers = _context.ApplicationUsers
+                .Where(u => u.DateExpiration < currentDate)
+                .ToList();
+
+            foreach (var user in expiredUsers)
+            {
+                // Perform the necessary action to disable user access based on the user ID.
+                // For example, you can update the RoleId of the corresponding user in prmsUsersRoles table to null.
+
+                UpdateUserAccess(user.Id);
+            }
+
+            // Return an appropriate response indicating the action was completed.
+            return Content("Expired users have been disabled.");
+        }
+
+        // Helper method to update user access
+        private void UpdateUserAccess(string userId)
+        {
+            var userRole = _context.UserRoles
+                .SingleOrDefault(ur => ur.UserId == userId);
+
+            if (userRole != null)
+            {
+                userRole.RoleId = null;
+                _context.UserRoles.Update(userRole);
+                _context.SaveChanges();
+            }
+        }
+
+
         public IActionResult ListAllRoles()
         {
             var roles = _roleManager.Roles;
