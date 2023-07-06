@@ -27,14 +27,11 @@ namespace PReMaSys.Controllers
             DateTime currentDate = DateTime.Now.Date;
 
             var expiredUsers = _context.ApplicationUsers
-                .Where(u => u.DateExpiration < currentDate)
+                .Where(u => u.DateExpiration <= currentDate)
                 .ToList();
 
             foreach (var user in expiredUsers)
-            {
-                // Perform the necessary action to disable user access based on the user ID.
-                // For example, you can update the RoleId of the corresponding user in prmsUsersRoles table to null.
-
+            {                
                 UpdateUserAccess(user.Id);
             }
 
@@ -45,15 +42,17 @@ namespace PReMaSys.Controllers
         // Helper method to update user access
         private void UpdateUserAccess(string userId)
         {
-            var userRole = _context.UserRoles
-                .SingleOrDefault(ur => ur.UserId == userId);
+            var userRoles = _context.UserRoles
+                .Where(ur => ur.UserId == userId)
+                .ToList();
 
-            if (userRole != null)
+            foreach (var userRole in userRoles)
             {
                 userRole.RoleId = null;
                 _context.UserRoles.Update(userRole);
-                _context.SaveChanges();
             }
+
+            _context.SaveChanges();
         }
 
 
