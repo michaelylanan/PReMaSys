@@ -68,16 +68,28 @@
               </li>
              <li class="navbar-item">
                 <a class="nav-link-admin" asp-area="" asp-controller="Domain" asp-action="ApproveRewards">
+                <div class="d-flex">
+                    <p class="me-2">Rewards</p>
                     <i class="fas fa-gift fa-1x"></i>
                     <span class="badge rounded-pill badge-notification bg-danger">@ViewBag.TotalRewards</span>
+                 </div>
                 </a>
             </li>
-             <li class="navbar-item">
+              <li class="nav-item dropdown">
+          <a class="nav-link-admin2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Others
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" asp-area="" asp-controller="Domain" asp-action="SEPoints">Sales Profit Points</a></li>
+            <li><a class="dropdown-item" asp-area="" asp-controller="Domain" asp-action="Subscription">Subscription</a></li>
+          </ul>
+        </li>
+             @*<li class="navbar-item">
                 <a class="nav-link-admin2" asp-area="" asp-controller="Domain" asp-action="SEPoints">Sales Profit Points</a>
              </li>
              <li class="navbar-item">
                 <a class="nav-link-admin2" asp-area="" asp-controller="Domain" asp-action="Subscription">Subscription</a>
-             </li>
+             </li>*@
             </ul> 
                  <partial name="_LoginPartial" />
         </div>

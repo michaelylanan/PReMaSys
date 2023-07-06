@@ -331,3 +331,8 @@ ul.navbar-list {
 .card-rewards:hover, .criteria-card:hover {
     box-shadow: 10px 10px #4cb55a;
 }
+
+thead {
+    background-color: #4eab38;
+    color:white;
+}
