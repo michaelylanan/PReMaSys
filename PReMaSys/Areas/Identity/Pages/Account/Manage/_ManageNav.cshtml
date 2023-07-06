@@ -13,4 +13,21 @@
     }
     <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
+    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Domain"))
+    {
+       <li class="d-flex justify-content-center"><a  class="btn btn-success w-50 mt-3"  role="button" asp-action="ReportsPage" asp-controller="Domain" >Back</a></li>
+    }
+       @if (SignInManager.IsSignedIn(User) && User.IsInRole("Sales"))
+    {
+       <li class="d-flex justify-content-center"><a class="btn btn-success  w-50 mt-3"  role="button" asp-action="EmployeeHomePage" asp-controller="Sales">Back</a></li>
+    }
+       @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+    {
+       <li class="d-flex justify-content-center"><a class="btn btn-success  w-50 mt-3"  role="button" asp-action="ReportsPage" asp-controller="Admin" >Back</a></li>
+    }
+       @if (SignInManager.IsSignedIn(User) && User.IsInRole("Support"))
+    {
+      <li class="d-flex justify-content-center"><a class="btn btn-success  w-50 mt-3"  role="button" asp-action="SupportPage" asp-controller="SupportAdmin">Back</a></li>
+    } 
+
 </ul>

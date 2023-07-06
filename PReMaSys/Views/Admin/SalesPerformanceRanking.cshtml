@@ -19,7 +19,7 @@
     <img src="~/img/trophy.png" alt="Default Image" style="height:10em">
 </div>
 
-
+ 
 
 <div class="container" style="display:flex; justify-content:center" id="row">
     <div class="row">
@@ -30,7 +30,7 @@
             @foreach (var (index, performance) in Model.TopThreeP.Select((value, i) => (i + 1, value)))
             {
                 <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="card ranking-card text-bg-light mb-3 mx-auto" style="padding:5px">
+                    <div class="card ranking-card mb-3 mx-auto" style="padding:5px">
                         @{
                             var salesName = _context.SERecord.FirstOrDefault(s => s.EmployeeNo == performance.SalesPerson)?.EmployeeFirstname;
                             var salesLName = _context.SERecord.FirstOrDefault(s => s.EmployeeNo == performance.SalesPerson)?.EmployeeLastname;
@@ -68,9 +68,9 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th style="background-color:#A5FFA9">Units Sold</th>
-                                    <th style="background-color:#A5FFA9">Sales Revenue</th>
-                                    <th style="background-color:#A5FFA9">Sales Profit</th>
+                                    <th>Units Sold</th>
+                                    <th>Sales Revenue</th>
+                                    <th>Sales Profit</th>
                                 </tr>
                             </thead>
                             <tbody>
