@@ -29,6 +29,12 @@ namespace PReMaSys.Controllers
 
         }
 
+        public IActionResult Payment()
+        {
+
+            return View();
+        }
+
         public IActionResult ReportsPage()
         {
             UpdateSalesPersonOfTheMonthAndYear();

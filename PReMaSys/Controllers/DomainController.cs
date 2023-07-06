@@ -12,6 +12,9 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Stripe.Infrastructure;
+using Stripe.Checkout;
+using Stripe;
 
 namespace PReMaSys.Controllers
 {
@@ -22,6 +25,7 @@ namespace PReMaSys.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        
 
         public DomainController(RoleManager<IdentityRole> roleManager, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IEmailSender emailSender)
         {
@@ -29,8 +33,55 @@ namespace PReMaSys.Controllers
             _context = context;
             _userManager = userManager;
             _emailSender = emailSender;
+
+
         }
         public IActionResult DomainPage()
+        {
+            return View();
+        }
+
+  
+        public IActionResult Payment(string amount)
+        {
+            StripeConfiguration.SetApiKey("sk_test_51NQXLfLnmEYUKKTC7j8BPrLJEoD0qlsRvojPu2n0sJJ45PKwWfVYykTQkiyrNt3QSyTHePD2VXHgY9Cl7oJPUok400Su8fYcCZ");
+            var options = new Stripe.Checkout.SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+        {
+          new SessionLineItemOptions
+          {
+            PriceData = new SessionLineItemPriceDataOptions
+            {
+              UnitAmount =Convert.ToInt32(5000)*100,
+              Currency = "php",
+              ProductData = new SessionLineItemPriceDataProductDataOptions
+              {
+                Name = "1-Month Premasys Subscription",
+              },
+
+            },
+            Quantity = 1,
+          },
+        },
+                Mode = "payment",
+                SuccessUrl = "https://localhost:7126/Domain/PaymentSuccess",
+                CancelUrl = "https://localhost:7126/Domain/PaymentCancel",
+            };
+
+            var service = new Stripe.Checkout.SessionService();
+            Stripe.Checkout.Session session = service.Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+
+        public IActionResult PaymentSuccess()
+        {
+            return View();
+        }
+
+        public IActionResult PaymentCancel()
         {
             return View();
         }
@@ -63,7 +114,7 @@ namespace PReMaSys.Controllers
 
         public IActionResult Ranking() 
         {
-
+            
             ApplicationUser au = _userManager.GetUserAsync(HttpContext.User).Result;
             var checker = _context.ApplicationUsers.FirstOrDefault(a => a.user == au && a.Role == "Admin");
 

@@ -19,7 +19,10 @@
                         <li>A second item</li>
                         <li>A third item</li>
                     </ul>
-                    <button type="button" class="w-100 btn btn-lg btn-outline-success mt-4 mb-4"> Subscribe </button>
+                    <form asp-controller="Domain" asp-action="Payment" method="post">
+                        <input type="submit" value="Subscribe" class="w-100 btn btn-lg btn-outline-success mt-4 mb-4" />
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -35,24 +38,26 @@
                         <li>A second item</li>
                         <li>A third item</li>
                     </ul>
-                    <button type="button" class="w-100 btn btn-lg btn-outline-success mt-4 mb-4"> Subscribe </button>
+                    <form asp-controller="Domain" asp-action="Payment" method="post">
+                        <input type="submit" value="Subscribe" class="w-100 btn btn-lg btn-outline-success mt-4 mb-4" />
+                    </form>
+                   
                 </div>
             </div>
         </div>
         <div class="col">
-            <div class="card  mb-3" @*style="width: 18rem;*@">
-                <div class="card-header">
-                    <h4 class="text-center">Free</h4>
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title subscription-card-title text-center mt-5 mb-5">$0<small class="text-muted fw-light">/mo</small></h1>
-                    <ul class="list-unstyled mt-3 mb-4 text-center">
-                        <li>An item</li>
-                        <li>A second item</li>
-                        <li>A third item</li>
-                    </ul>
-                    <button type="button" class="w-100 btn btn-lg btn-outline-success mt-4 mb-4"> Subscribe </button>
-                </div>
+            <div class="card-body">
+                <h1 class="card-title subscription-card-title text-center mt-5 mb-5">$0<small class="text-muted fw-light">/mo</small></h1>
+                <ul class="list-unstyled mt-3 mb-4 text-center">
+                    <li>An item</li>
+                    <li>A second item</li>
+                    <li>A third item</li>
+                </ul>
+                <form asp-controller="Domain" asp-action="Payment" method="post">
+                    <input type="submit" value="Subscribe" class="w-100 btn btn-lg btn-outline-success mt-4 mb-4" />
+                </form>
+
+            </div>
             </div>
         </div>
 
