@@ -9,6 +9,20 @@ using PReMaSys.ViewModel;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using System;
+using Accord.MachineLearning;
+using Accord.MachineLearning.VectorMachines;
+using Accord.MachineLearning.VectorMachines.Learning;
+
+//using Accord.MachineLearning.VectorMachines.SupportVectorMachines;
+//using Accord.MachineLearning.VectorMachines.SupportVectorMachines.Kernels;
+using Accord.Statistics.Kernels;
+using Accord.Statistics.Models.Regression;
+using Accord.Statistics.Models.Regression.Linear;
+using Azure.ResourceManager.MachineLearning.Models;
+using MathNet.Numerics;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearRegression;
+
 
 namespace PReMaSys.Controllers
 {
@@ -27,6 +41,172 @@ namespace PReMaSys.Controllers
             _userManager = userManager;
 
 
+        }
+
+        public IActionResult ARIMA2()
+        {
+            var salesPerformances = _context.SalesPerformances.ToList();
+            List<decimal?> salesProfitList = new List<decimal?>();
+            List<DateTime> dateAddedList = new List<DateTime>();
+
+            // Group sales performances by month
+            var salesByMonth = salesPerformances
+                .GroupBy(sp => new { sp.DateAdded.Year, sp.DateAdded.Month })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    TotalProfit = g.Sum(sp => sp.SalesProfit)
+                })
+                .OrderBy(g => g.Year)
+                .ThenBy(g => g.Month);
+
+            // Iterate through each grouped month and calculate the sum of profits
+            foreach (var salesMonth in salesByMonth)
+            {
+                decimal? totalProfit = salesMonth.TotalProfit;
+
+                // Add the total profit to the list
+                salesProfitList.Add(totalProfit);
+
+                // Create a DateTime object for the month
+                DateTime monthDate = new DateTime(salesMonth.Year, salesMonth.Month, 1);
+
+                // Add the month date to the list
+                dateAddedList.Add(monthDate);
+            }
+
+            //Perform differencing on the salesprofit
+            List<decimal?> differentiationList = new List<decimal?>();
+            for (int i = 1; i < salesProfitList.Count; i++)
+            {
+                decimal? differentiation = salesProfitList[i] - salesProfitList[i - 1];
+                differentiationList.Add(differentiation);
+            }
+
+            // - - - - - - - - - - -
+
+            // Convert salesProfitList to a vector
+            Vector<double> salesProfitVector = Vector<double>.Build.DenseOfEnumerable(salesProfitList.Select(x => (double)x));
+
+            // Define the autoregressive order (p), differencing order (d), and moving average order (q). We are using Standard Arima Model where p, d and q are 1.
+            int p = 1; // Autoregressive order
+            int d = 1; // Differencing order
+            int q = 1; // Moving average order
+
+            // Apply differencing to the sales profit vector
+            Vector<double> differentiationVector = Vector<double>.Build.DenseOfEnumerable(differentiationList.Select(d => (double)d));
+
+            // Prepare the data for autoregressive and moving average modeling
+            int n = differentiationVector.Count - Math.Max(p, q);
+            Matrix<double> inputs = Matrix<double>.Build.Dense(n, p + q);
+            Vector<double> outputs = differentiationVector.SubVector(Math.Max(p, q), n);
+
+            for (int i = 0; i < n; i++)
+            {
+                inputs[i, 0] = differentiationVector[i];
+                inputs[i, 1] = outputs[i];
+            }
+
+            // Fit an autoregressive and moving average model
+            Vector<double> arCoefficients = MultipleRegression.QR(inputs, outputs);
+
+            // Get the autoregressive and moving average coefficients
+            double arCoefficient = arCoefficients[0];
+            double maCoefficient = arCoefficients[1];
+            double dCoefficient = 2;
+           
+
+            // Compute the forecast for one value
+            double arComponent = arCoefficient * differentiationVector[differentiationVector.Count - 1];
+            double maComponent = maCoefficient * salesProfitVector[salesProfitVector.Count - 1];
+
+            //double forecast = salesProfitVector[salesProfitVector.Count - 1] + arComponent + maComponent;
+
+            double forecast = (salesProfitVector[salesProfitVector.Count - 1] + arComponent + maComponent)* dCoefficient;
+
+
+            ViewBag.salesProfitListByMonth = salesProfitList; //testing - remove after
+            ViewBag.dateAddedByMonth = dateAddedList; //testing - remove after
+
+            // Add the forecast value to the salesProfitList
+            salesProfitList.Add((decimal?)forecast);
+
+
+            var newDate = DateTime.Now.AddMonths(1);
+            dateAddedList.Add(new DateTime(newDate.Year, newDate.Month, 1));
+
+
+
+            ViewBag.SalesProfitList = salesProfitList;
+            ViewBag.DateAddedList = dateAddedList;
+            ViewBag.getForecast = forecast;
+            return View();
+        }
+        public IActionResult ARIMA()
+        {
+            var salesPerformances = _context.SalesPerformances.ToList();
+            List<decimal?> salesProfitList = new List<decimal?>();
+            List<DateTime> dateAddedList = new List<DateTime>();
+
+            foreach (var performance in salesPerformances)
+            {
+                var dateAdded = performance.DateAdded;
+                var salesProfit = performance.SalesProfit;
+
+                salesProfitList.Add(salesProfit);
+                dateAddedList.Add(dateAdded);
+
+                // Use the dateAdded and salesProfit variables as needed
+            }
+
+            //ForecastingModel.AutoArima fm = new ForecastingModel("bruh");
+           
+
+            decimal?[] salesArray = salesProfitList.ToArray();
+            DateTime[] dateArray = dateAddedList.ToArray();
+
+            var regression = new OrdinaryLeastSquares();
+            double[][] inputs = new double[salesArray.Length - 1][];
+            double[] outputs = new double[salesArray.Length - 1];
+
+            for (int i = 1; i < salesArray.Length; i++)
+            {
+                inputs[i - 1] = new double[] { (double)salesArray[i - 1] };
+                outputs[i - 1] = (double)salesArray[i];
+            }
+
+            MultipleLinearRegression arima = regression.Learn(inputs, outputs);
+
+            int forecastPeriods = 10; // Adjust this value as per your requirement
+
+            double[] futureInputs = new double[forecastPeriods];
+            for (int i = 0; i < forecastPeriods; i++)
+            {
+                futureInputs[i] = (double)salesArray[salesArray.Length - forecastPeriods + i];
+            }
+
+            double[] futureForecasts = new double[forecastPeriods];
+
+            for (int i = 0; i < forecastPeriods; i++)
+            {
+                futureForecasts[i] = arima.Transform(new double[] { futureInputs[i] });
+            }
+
+            List<decimal> forecastedRevenue = futureForecasts.Select(x => (decimal)x).ToList();
+            List<DateTime> forecastedDates = new List<DateTime>();
+
+            DateTime lastDate = dateAddedList[dateAddedList.Count - 1];
+            for (int i = 1; i <= forecastPeriods; i++)
+            {
+                forecastedDates.Add(lastDate.AddMonths(i));
+            }
+
+            ViewBag.ForecastedRevenue = forecastedRevenue;
+            ViewBag.ForecastedDates = forecastedDates;
+
+
+            return View();
         }
 
         public IActionResult Payment()

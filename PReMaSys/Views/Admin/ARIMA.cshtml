@@ -1,0 +1,17 @@
+﻿@{
+    var forecastedRevenue = ViewBag.ForecastedRevenue as List<decimal>;
+    var forecastedDates = ViewBag.ForecastedDates as List<DateTime>;
+}
+
+@if (forecastedRevenue != null && forecastedDates != null && forecastedRevenue.Count == forecastedDates.Count)
+{
+    <!-- Display the forecasted revenue and dates -->
+    @foreach (var item in forecastedRevenue.Zip(forecastedDates, (r, d) => new { Revenue = r, Date = d }))
+    {
+        <p>Date: @item.Date.ToShortDateString(), Revenue: @item.Revenue</p>
+    }
+}
+else
+{
+    <p>Unable to display forecasted revenue and dates.</p>
+}

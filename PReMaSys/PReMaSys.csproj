@@ -8,8 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Accord" Version="3.8.0" />
+    <PackageReference Include="Accord.MachineLearning" Version="3.8.0" />
+    <PackageReference Include="Azure.ResourceManager.MachineLearning" Version="1.1.1" />
     <PackageReference Include="Chart.js" Version="3.7.1" />
+    <PackageReference Include="Dew.Stats" Version="6.0.8" />
+    <PackageReference Include="Dew.Stats.Core" Version="6.0.8" />
     <PackageReference Include="EPPlus" Version="6.2.6" />
+    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.18" />

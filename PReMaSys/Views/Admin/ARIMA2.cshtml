@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>ARIMA2</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>ARIMA2</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Sales Profit Chart</h5>
+            <canvas id="lineChart"></canvas>
+        </div>
+    </div>
+
+    @ViewBag.getForecast
+
+    <script>
+        // Retrieve the sales profit and date added from ViewBag
+        var salesProfitList = @Html.Raw(Json.Serialize(ViewBag.SalesProfitList));
+        var dateAddedList = @Html.Raw(Json.Serialize(ViewBag.DateAddedList));
+
+        // Create the chart
+        var ctx = document.getElementById('lineChart').getContext('2d');
+        var lineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dateAddedList.map(date => date.substr(0, 10)),
+                datasets: [
+                    {
+                        label: 'Sales Profit',
+                        data: salesProfitList,
+                        borderColor: 'blue',
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Sales Profit Chart'
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Sales Profit'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
